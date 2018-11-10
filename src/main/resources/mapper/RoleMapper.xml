@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ck.lmmanagement.mapper.RoleMapper" >
+    <!--获取用户所有角色-->
+    <select id="findDataById" parameterType="java.lang.Long" resultType="Role">
+        SELECT
+            fr.id id,
+            fr.role_code roleCode,
+            fr.role_name roleName,
+            fr.role_desc roleDesc
+        FROM
+            b_user_role_relation brr,
+            m_fnd_role fr
+        WHERE
+            brr.role_id = fr.id
+            AND brr.user_id = #{id}
+    </select>
+
+</mapper>
+

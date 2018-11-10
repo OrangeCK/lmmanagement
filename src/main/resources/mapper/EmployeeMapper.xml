@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ck.lmmanagement.mapper.EmployeeMapper" >
+    <!--验证登录是否正确-->
+    <select id="loginAccount" parameterType="java.lang.String" resultType="Employee">
+        SELECT
+            fu.id id,
+            fu.user_name userName,
+            fu.login_name loginName,
+            fu.phone_number userPhone
+        FROM
+            m_fnd_user fu
+        WHERE
+            fu.login_name = #{loginName}
+            AND fu.password = #{password}
+    </select>
+    <!--验证是否有这个用户-->
+    <select id="loginAccountByLoginName" parameterType="java.lang.String" resultType="Employee">
+        SELECT
+        fu.id id,
+        fu.user_name userName,
+        fu.login_name loginName,
+        fu.password password,
+        fu.phone_number userPhone
+        FROM
+        m_fnd_user fu
+        WHERE
+        fu.login_name = #{loginName}
+    </select>
+</mapper>
+
