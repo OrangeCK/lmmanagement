@@ -7,11 +7,38 @@ package com.ck.lmmanagement.domain;
  */
 public class Employee extends BaseForm{
     private Long id;
+    /**
+     * 登录名称
+     */
     private String loginName;
+    /**
+     * 用户名称
+     */
     private String userName;
+    /**
+     * 密码
+     */
     private String password;
+    /**
+     * 用户电话
+     */
     private String userPhone;
+    /**
+     * 工号
+     */
     private String jobNumber;
+    /**
+     * 年龄
+     */
+    private Integer age;
+    /**
+     * 性别代码
+     */
+    private String sex;
+    /**
+     * 性别名称
+     */
+    private String sexName;
 
     public String getLoginName() {
         return loginName;
@@ -59,5 +86,29 @@ public class Employee extends BaseForm{
 
     public void setJobNumber(String jobNumber) {
         this.jobNumber = jobNumber;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getSexName() {
+        return sexName;
+    }
+
+    public void setSexName(String sexName) {
+        this.sexName = sexName;
     }
 }

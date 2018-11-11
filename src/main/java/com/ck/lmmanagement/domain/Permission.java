@@ -13,11 +13,11 @@ public class Permission extends BaseForm{
     /**
      * 权限编码
      */
-    private String permissionCode;
+    private String permCode;
     /**
      * 权限描述
      */
-    private String permissionDesc;
+    private String permDesc;
     /**
      * 权限路径
      */
@@ -31,20 +31,20 @@ public class Permission extends BaseForm{
         this.id = id;
     }
 
-    public String getPermissionCode() {
-        return permissionCode;
+    public String getPermCode() {
+        return permCode;
     }
 
-    public void setPermissionCode(String permissionCode) {
-        this.permissionCode = permissionCode;
+    public void setPermCode(String permCode) {
+        this.permCode = permCode;
     }
 
-    public String getPermissionDesc() {
-        return permissionDesc;
+    public String getPermDesc() {
+        return permDesc;
     }
 
-    public void setPermissionDesc(String permissionDesc) {
-        this.permissionDesc = permissionDesc;
+    public void setPermDesc(String permDesc) {
+        this.permDesc = permDesc;
     }
 
     public String getResources() {

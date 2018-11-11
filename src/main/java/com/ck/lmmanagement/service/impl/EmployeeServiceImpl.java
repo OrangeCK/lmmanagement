@@ -25,4 +25,6 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
     public Employee loginAccountByLoginName(String loginName) {
         return employeeMapper.loginAccountByLoginName(loginName);
     }
+
+
 }

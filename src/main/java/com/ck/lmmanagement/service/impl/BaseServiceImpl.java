@@ -6,6 +6,7 @@ import com.ck.lmmanagement.mapper.BaseMapper;
 import com.ck.lmmanagement.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,8 +40,13 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     }
 
     @Override
-    public Integer saveForm(T form) {
-        return null;
+    public T saveForm(T form) {
+        basicForm(form);
+        int count = baseMapper.saveForm(form);
+        if(count < 1){
+            form.setEnableFlag(false);
+        }
+        return form;
     }
 
     @Override
@@ -61,5 +67,11 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     @Override
     public Integer updateToEnable(T form) {
         return null;
+    }
+
+    public void basicForm(T form){
+        Date date=new Date();
+        form.setCreationDate(date);
+        form.setUpdatedDate(date);
     }
 }

@@ -5,8 +5,8 @@
     <select id="findDataById" parameterType="java.lang.Long" resultType="Permission">
         SELECT
             fp.id id,
-            fp.permission_code permissionCode,
-            fp.permission_desc permissionDesc,
+            fp.perm_code permCode,
+            fp.perm_desc permDesc,
             fp.resources resources
         FROM
             b_user_role_relation brr,
@@ -23,8 +23,8 @@
     <select id="findData" parameterType="Permission" resultType="Permission">
         SELECT
             fp.id id,
-            fp.permission_code permissionCode,
-            fp.permission_desc permissionDesc,
+            fp.perm_code permCode,
+            fp.perm_desc permDesc,
             fp.resources resources
         FROM
             m_fnd_permission fp

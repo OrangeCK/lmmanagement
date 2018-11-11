@@ -26,4 +26,5 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      * @return
      */
     Employee loginAccountByLoginName(@Param("loginName") String loginName);
+
 }

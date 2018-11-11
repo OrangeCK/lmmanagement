@@ -38,13 +38,14 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/images/**", "anon");
         filterChainDefinitionMap.put("/login/**", "anon");
+        filterChainDefinitionMap.put("/employee/**", "anon");
         // 查询所有权限
         List<Permission> permissionList =  permissionService.findData(null);
         for(Permission permission : permissionList){
-            if(StringUtils.isEmpty(permission.getPermissionCode()) || StringUtils.isEmpty(permission.getResources())){
+            if(StringUtils.isEmpty(permission.getPermCode()) || StringUtils.isEmpty(permission.getResources())){
                 continue;
             }
-            filterChainDefinitionMap.put(permission.getResources(), "perms[" + permission.getPermissionCode() + "]");
+            filterChainDefinitionMap.put(permission.getResources(), "perms[" + permission.getPermCode() + "]");
         }
         logger.info("所有权限:{}", filterChainDefinitionMap);
         filterChainDefinitionMap.put("/**", "authc");

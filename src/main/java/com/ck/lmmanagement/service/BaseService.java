@@ -46,7 +46,7 @@ public interface BaseService<T extends BaseForm> {
      * @param form
      * @return
      */
-    Integer saveForm(T form);
+    T saveForm(T form);
 
     /**
      * 更新

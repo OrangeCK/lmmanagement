@@ -1,6 +1,7 @@
 package com.ck.lmmanagement.exception;
 
 import com.ck.lmmanagement.constant.LmConstant;
+import com.ck.lmmanagement.constant.LmEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +68,9 @@ public class MyBasicErrorController extends AbstractErrorController {
         Map<String, Object> body = getErrorAttributes(request,
                 isIncludeStackTrace(request, MediaType.ALL));
         Map map = new HashMap<String, Object>();
-        map.put("msg", LmConstant.SYSTEM_EXCEPTION);
+        map.put("msg", LmEnum.SYSTEM_EXCEPTION.getName());
         map.put("code", body.get("status"));
-        map.put("status", "fail");
+        map.put("status",  "fail");
         map.put("time", body.get("timestamp"));
         HttpStatus status = this.getStatus(request);
         logHandler(body);

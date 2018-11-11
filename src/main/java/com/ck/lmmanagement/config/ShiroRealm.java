@@ -49,7 +49,7 @@ public class ShiroRealm extends AuthorizingRealm {
             // 注入权限
             List<Permission> permissionList = permissionService.findDataById(employee.getId());
             for(Permission permission : permissionList){
-                authorizationInfo.addStringPermission(permission.getPermissionCode());
+                authorizationInfo.addStringPermission(permission.getPermCode());
             }
         } catch (Exception e) {
             e.printStackTrace();

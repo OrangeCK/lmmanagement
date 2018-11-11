@@ -7,7 +7,7 @@
             fu.id id,
             fu.user_name userName,
             fu.login_name loginName,
-            fu.phone_number userPhone
+            fu.user_phone userPhone
         FROM
             m_fnd_user fu
         WHERE
@@ -17,15 +17,42 @@
     <!--验证是否有这个用户-->
     <select id="loginAccountByLoginName" parameterType="java.lang.String" resultType="Employee">
         SELECT
-        fu.id id,
-        fu.user_name userName,
-        fu.login_name loginName,
-        fu.password password,
-        fu.phone_number userPhone
+            fu.id id,
+            fu.user_name userName,
+            fu.login_name loginName,
+            fu.password password,
+            fu.user_phone userPhone
         FROM
-        m_fnd_user fu
+            m_fnd_user fu
         WHERE
-        fu.login_name = #{loginName}
+            fu.login_name = #{loginName}
     </select>
+    <!--分页查询-->
+    <select id="findPageData" parameterType="Employee" resultType="Employee">
+        SELECT
+            fu.id id,
+            fu.user_name userName,
+            fu.login_name loginName,
+            fu.password password,
+            fu.job_number jobNumber,
+            fu.user_phone userPhone,
+            fu.age age,
+            fu.sex sex
+        FROM
+            m_fnd_user fu
+    </select>
+    <!--分页查询总数-->
+    <select id="findPageTotal" parameterType="Employee" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+            m_fnd_user fu
+    </select>
+    <!--新增用户-->
+    <insert id="saveForm" parameterType="Employee">
+        INSERT INTO m_fnd_user (login_name, user_name, password, job_number, age, sex, user_phone, s_cid, s_ct, s_uid, s_ut )
+        VALUES
+        (#{loginName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{jobNumber,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=CHAR}, #{userPhone,jdbcType=VARCHAR}, 1, #{creationDate}, 1, #{updatedDate} );
+    </insert>
 </mapper>
 
