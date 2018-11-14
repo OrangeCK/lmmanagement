@@ -1,5 +1,8 @@
 package com.ck.lmmanagement.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author 01378803
  * @date 2018/10/17 15:46
@@ -39,6 +42,10 @@ public class Employee extends BaseForm{
      * 性别名称
      */
     private String sexName;
+    /**
+     * 角色
+     */
+    private List<Role> roles = new ArrayList<>();
 
     public String getLoginName() {
         return loginName;
@@ -110,5 +117,13 @@ public class Employee extends BaseForm{
 
     public void setSexName(String sexName) {
         this.sexName = sexName;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

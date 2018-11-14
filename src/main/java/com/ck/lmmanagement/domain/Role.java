@@ -7,9 +7,30 @@ package com.ck.lmmanagement.domain;
  */
 public class Role extends BaseForm{
     private Long id;
+    /**
+     * 角色编码
+     */
     private String roleCode;
+    /**
+     * 角色名称
+     */
     private String roleName;
+    /**
+     * 角色描述
+     */
     private String roleDesc;
+    /**
+     * 用户id
+     */
+    private Long user_id;
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
+    }
 
     public Long getId() {
         return id;

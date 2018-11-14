@@ -12,4 +12,10 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface RoleMapper extends BaseMapper<Role> {
+    /**
+     * 增加用户与角色之前的关系
+     * @param role 角色对象
+     * @return
+     */
+    Integer addUserAndRoleRelation(Role role);
 }

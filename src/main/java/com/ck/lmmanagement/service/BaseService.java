@@ -4,6 +4,7 @@ package com.ck.lmmanagement.service;
 
 import com.ck.lmmanagement.domain.BaseForm;
 import com.ck.lmmanagement.domain.PageList;
+import com.ck.lmmanagement.exception.MyException;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public interface BaseService<T extends BaseForm> {
      * @param form
      * @return
      */
-    T saveForm(T form);
+    T saveForm(T form) throws MyException;
 
     /**
      * 更新

@@ -17,7 +17,9 @@ public enum LmEnum {
     /**
      * 性别女
      */
-    SEX_FEMALE("女", "0");
+    SEX_FEMALE("女", "0"),
+    RETURN_NUM_200(200),RETURN_NUM_201(201),RETURN_NUM_202(202),RETURN_NUM_203(203),RETURN_NUM_204(204);
+    private Integer num;
     /**
      * name
      */
@@ -26,7 +28,9 @@ public enum LmEnum {
      * code
      */
     private String code;
-
+    private LmEnum(Integer num){
+        this.num = num;
+    }
     private LmEnum(String name){
         this.name = name;
     }
@@ -58,5 +62,13 @@ public enum LmEnum {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }

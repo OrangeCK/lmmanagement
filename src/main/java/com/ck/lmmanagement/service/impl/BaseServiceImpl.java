@@ -2,9 +2,11 @@ package com.ck.lmmanagement.service.impl;
 
 import com.ck.lmmanagement.domain.BaseForm;
 import com.ck.lmmanagement.domain.PageList;
+import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.mapper.BaseMapper;
 import com.ck.lmmanagement.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
  * @date 2018/10/28 0028
  * Description :
  */
+@Transactional(rollbackFor=Exception.class)
 public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     @Autowired
     private BaseMapper<T> baseMapper;
@@ -40,7 +43,7 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     }
 
     @Override
-    public T saveForm(T form) {
+    public T saveForm(T form) throws MyException {
         basicForm(form);
         int count = baseMapper.saveForm(form);
         if(count < 1){

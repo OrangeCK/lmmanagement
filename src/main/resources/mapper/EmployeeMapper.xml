@@ -50,6 +50,9 @@
     </select>
     <!--新增用户-->
     <insert id="saveForm" parameterType="Employee">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO m_fnd_user (login_name, user_name, password, job_number, age, sex, user_phone, s_cid, s_ct, s_uid, s_ut )
         VALUES
         (#{loginName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{jobNumber,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=CHAR}, #{userPhone,jdbcType=VARCHAR}, 1, #{creationDate}, 1, #{updatedDate} );

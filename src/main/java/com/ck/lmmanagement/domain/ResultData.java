@@ -72,4 +72,13 @@ public class ResultData {
         }
         this.msg = msg;
     }
+
+    public ResultData(Integer code, String status, String msg){
+        this.code = code;
+        this.status = status;
+        if(StringUtils.isEmpty(status)){
+            status = "succ";
+        }
+        this.msg = msg;
+    }
 }

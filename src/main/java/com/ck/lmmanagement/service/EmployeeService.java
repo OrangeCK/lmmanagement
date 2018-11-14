@@ -2,6 +2,7 @@ package com.ck.lmmanagement.service;
 
 
 import com.ck.lmmanagement.domain.Employee;
+import com.ck.lmmanagement.exception.MyException;
 
 /**
  * @author 01378803

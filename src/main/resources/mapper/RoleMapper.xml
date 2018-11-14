@@ -16,10 +16,10 @@
             AND brr.user_id = #{id}
     </select>
     <!--增加用户与角色之前的关系-->
-    <!--<insert id="addUserAndRoleRelation" parameterMap="java.util.Map">-->
-        <!--INSERT INTO `b_user_role_relation` (`user_id`, `role_id`, `s_cid`, `s_ct`, `s_uid`, `s_ut` )-->
-        <!--VALUES-->
-        <!--(1, 1, 1, '2018-11-11 14:14:31', 1, '2018-11-11 14:14:33' );-->
-    <!--</insert>-->
+    <insert id="addUserAndRoleRelation" parameterType="Role">
+        INSERT INTO `b_user_role_relation` (`user_id`, `role_id`, `s_cid`, `s_ct`, `s_uid`, `s_ut` )
+        VALUES
+        (1, 1, 1, '2018-11-11 14:14:31', 1, '2018-11-11 14:14:33' );
+    </insert>
 </mapper>
 
