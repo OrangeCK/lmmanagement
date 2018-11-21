@@ -61,6 +61,7 @@ public class BaseForm {
         this.rows = rows;
     }
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     public Date getCreationDate() {
         return creationDate;
     }
@@ -77,6 +78,7 @@ public class BaseForm {
         this.creationBy = creationBy;
     }
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     public Date getUpdatedDate() {
         return updatedDate;
     }

@@ -6,6 +6,9 @@ import com.ck.lmmanagement.domain.PageList;
 import com.ck.lmmanagement.domain.ResultData;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.service.EmployeeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -26,6 +27,7 @@ import java.io.StringWriter;
  */
 @RestController
 @RequestMapping("/employee")
+@Api(description = "用户管理的相关接口")
 public class EmployeeController {
     private final static Logger logger = LoggerFactory.getLogger(EmployeeController.class);
     @Autowired
@@ -36,8 +38,10 @@ public class EmployeeController {
      * @param employee 用户对象
      * @return 分页工具类
      */
-    @RequestMapping(value = "/employeePageList", method = RequestMethod.GET)
-    public PageList<Employee> employeePageList(Employee employee){
+    @ApiOperation(value = "用户的分页查询", notes = "用户的分页查询")
+    @ApiImplicitParam(name = "employee",value = "用户信息",required = true,paramType = "body",dataType = "Employee")
+    @RequestMapping(value = "/employeePageList", method = RequestMethod.POST)
+    public PageList<Employee> employeePageList(@RequestBody Employee employee){
         logger.info("用户的分页查询");
         return employeeService.getPageList(employee);
     }
@@ -47,6 +51,8 @@ public class EmployeeController {
      * @param employee 用户对象
      * @return 返回结果类
      */
+    @ApiOperation(value = "新增用户", notes = "新增用户")
+    @ApiImplicitParam(name = "employee",value="用户信息",required = true,paramType = "body",dataType = "Employee")
     @RequestMapping(value = "/addEmployee", method = RequestMethod.POST)
     public ResultData addEmployee(@RequestBody Employee employee){
         logger.info("正在新增用户");

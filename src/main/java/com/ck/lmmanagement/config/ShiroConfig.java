@@ -39,6 +39,10 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/images/**", "anon");
         filterChainDefinitionMap.put("/login/**", "anon");
         filterChainDefinitionMap.put("/employee/**", "anon");
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+        filterChainDefinitionMap.put("/v2/api-docs", "anon");
+        filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
         // 查询所有权限
         List<Permission> permissionList =  permissionService.findData(null);
         for(Permission permission : permissionList){

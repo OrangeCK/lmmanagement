@@ -37,7 +37,8 @@
             fu.job_number jobNumber,
             fu.user_phone userPhone,
             fu.age age,
-            fu.sex sex
+            fu.sex sex,
+            fu.s_ct creationDate
         FROM
             m_fnd_user fu
     </select>
@@ -55,7 +56,7 @@
         </selectKey>
         INSERT INTO m_fnd_user (login_name, user_name, password, job_number, age, sex, user_phone, s_cid, s_ct, s_uid, s_ut )
         VALUES
-        (#{loginName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{jobNumber,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=CHAR}, #{userPhone,jdbcType=VARCHAR}, 1, #{creationDate}, 1, #{updatedDate} );
+        (#{loginName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{jobNumber,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=CHAR}, #{userPhone,jdbcType=VARCHAR}, 1, #{creationDate, jdbcType=TIMESTAMP}, 1, #{updatedDate, jdbcType=TIMESTAMP} );
     </insert>
 </mapper>
 
