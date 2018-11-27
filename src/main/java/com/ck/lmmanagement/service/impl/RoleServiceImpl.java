@@ -15,4 +15,10 @@ import org.springframework.stereotype.Service;
 public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
+
+    @Override
+    public Integer addUserAndRoleRelation(Role role) {
+        super.basicForm(role);
+        return roleMapper.addUserAndRoleRelation(role);
+    }
 }

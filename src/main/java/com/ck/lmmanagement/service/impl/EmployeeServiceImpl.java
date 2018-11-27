@@ -4,11 +4,10 @@ import com.ck.lmmanagement.domain.Employee;
 import com.ck.lmmanagement.domain.Role;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.mapper.EmployeeMapper;
-import com.ck.lmmanagement.mapper.RoleMapper;
 import com.ck.lmmanagement.service.EmployeeService;
+import com.ck.lmmanagement.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author 01378803
@@ -20,7 +19,7 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
     @Autowired
     private EmployeeMapper employeeMapper;
     @Autowired
-    private RoleMapper roleMapper;
+    private RoleService roleService;
 
     @Override
     public Employee loginAccount(String loginName, String password) {
@@ -34,15 +33,24 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
 
     @Override
     public Employee saveForm(Employee form) throws MyException{
-        form = super.saveForm(form);
-        form.setId(null);
-        if(form.getId() == null){
-            throw new MyException("新增角色的用户ID为为空，请联系管理员");
-        }else{
+        // 保存用户信息
+        super.saveForm(form);
+        if(form.getId() != null){
+            // 循环保存用户角色关系
             for(Role role : form.getRoles()){
-                roleMapper.addUserAndRoleRelation(role);
+                role.setUserId(form.getId());
+                roleService.addUserAndRoleRelation(role);
             }
+        }else{
+            throw new MyException("新增角色的用户ID为为空，请联系管理员");
         }
+        return form;
+    }
+
+    @Override
+    public Employee updateForm(Employee form) throws MyException{
+        // 更新用户信息
+        super.updateForm(form);
         return form;
     }
 }

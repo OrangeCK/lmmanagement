@@ -54,7 +54,7 @@ public interface BaseService<T extends BaseForm> {
      * @param form
      * @return
      */
-    Integer updateForm(T form);
+    T updateForm(T form) throws MyException;
 
     /**
      * 删除

@@ -126,4 +126,20 @@ public class Employee extends BaseForm{
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", loginName='" + loginName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", userPhone='" + userPhone + '\'' +
+                ", jobNumber='" + jobNumber + '\'' +
+                ", age=" + age +
+                ", sex='" + sex + '\'' +
+                ", sexName='" + sexName + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
 }

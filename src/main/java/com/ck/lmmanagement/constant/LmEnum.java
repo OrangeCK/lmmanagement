@@ -11,14 +11,17 @@ public enum LmEnum {
      */
     SYSTEM_EXCEPTION("系统繁忙，请稍后再试"),
     /**
-     * 性别男
+     * 性别男、女
      */
-    SEX_MALE("男", "1"),
+    SEX_MALE("男", "1"),SEX_FEMALE("女", "0"),
     /**
-     * 性别女
+     * 返回json的code
      */
-    SEX_FEMALE("女", "0"),
-    RETURN_NUM_200(200),RETURN_NUM_201(201),RETURN_NUM_202(202),RETURN_NUM_203(203),RETURN_NUM_204(204);
+    RETURN_NUM_200(200),RETURN_NUM_201(201),RETURN_NUM_202(202),RETURN_NUM_203(203),RETURN_NUM_204(204),
+    /**
+     * Redis的key常量
+     */
+    MODULE_EMPLOYEE("LM:employee");
     private Integer num;
     /**
      * name
@@ -39,6 +42,11 @@ public enum LmEnum {
         this.code = code;
     }
 
+    /**
+     * 通过name值获取code值
+     * @param name
+     * @return
+     */
     public static String getCode(String name){
         for(LmEnum lmEnum : LmEnum.values()){
             if(lmEnum.getName().equals(name)){
@@ -48,6 +56,18 @@ public enum LmEnum {
         return null;
     }
 
+    /**
+     * 生成redis的key
+     * @param args
+     * @return
+     */
+    public String join(Object... args){
+        StringBuilder sb = new StringBuilder(name);
+        for(Object arg : args){
+            sb.append(":").append(arg);
+        }
+        return sb.toString();
+    }
     public String getName() {
         return name;
     }

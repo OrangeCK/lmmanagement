@@ -19,7 +19,7 @@
     <insert id="addUserAndRoleRelation" parameterType="Role">
         INSERT INTO `b_user_role_relation` (`user_id`, `role_id`, `s_cid`, `s_ct`, `s_uid`, `s_ut` )
         VALUES
-        (1, 1, 1, '2018-11-11 14:14:31', 1, '2018-11-11 14:14:33' );
+        (#{userId, jdbcType=BIGINT}, #{id, jdbcType=BIGINT}, #{creationBy, jdbcType=BIGINT}, #{creationDate, jdbcType=TIMESTAMP}, #{updatedBy, jdbcType=BIGINT}, #{updatedDate, jdbcType=TIMESTAMP});
     </insert>
 </mapper>
 

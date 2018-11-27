@@ -44,7 +44,7 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
 
     @Override
     public T saveForm(T form) throws MyException {
-        basicForm(form);
+        this.basicForm(form);
         int count = baseMapper.saveForm(form);
         if(count < 1){
             form.setEnableFlag(false);
@@ -53,8 +53,13 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     }
 
     @Override
-    public Integer updateForm(T form) {
-        return null;
+    public T updateForm(T form) throws MyException{
+        this.basicForm(form);
+        int count = baseMapper.updateForm(form);
+        if(count < 1){
+            form.setEnableFlag(false);
+        }
+        return form;
     }
 
     @Override
@@ -74,7 +79,9 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
 
     public void basicForm(T form){
         Date date=new Date();
+        form.setCreationBy((long)1);
         form.setCreationDate(date);
+        form.setUpdatedBy((long)1);
         form.setUpdatedDate(date);
     }
 }

@@ -9,4 +9,10 @@ import com.ck.lmmanagement.domain.Role;
  * Description  :
  */
 public interface RoleService extends BaseService<Role>{
+    /**
+     * 增加用户与角色之前的关系
+     * @param role 角色对象
+     * @return
+     */
+    Integer addUserAndRoleRelation(Role role);
 }

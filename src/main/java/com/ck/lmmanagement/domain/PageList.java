@@ -1,5 +1,6 @@
 package com.ck.lmmanagement.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * @date 2018/10/28 0028
  * Description : 分页返回类
  */
-public class PageList<T extends BaseForm> {
+public class PageList<T extends BaseForm> implements Serializable {
     /**
      * 分页总数
      */

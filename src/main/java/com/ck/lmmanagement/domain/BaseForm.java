@@ -1,17 +1,16 @@
 package com.ck.lmmanagement.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 /**
  * @author Administrator
  * @date 2018/10/28 0028
  * Description : form的基础父类
  */
-public class BaseForm {
+public class BaseForm implements Serializable {
     /**
      * 当前页，默认显示1
      */

@@ -9,21 +9,24 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.lang.reflect.Method;
+import java.time.Duration;
 
 /**
  * @author 01378803
  * @date 2018/11/8 16:47
  * Description  : redis的配置文件
  */
-//@Configuration
-//@EnableCaching
+@Configuration
+@EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
     /**
      * 生成key的策略 根据类名+方法名+所有参数的值生成唯一的一个key
@@ -37,12 +40,12 @@ public class RedisConfig extends CachingConfigurerSupport {
                 //格式化缓存key字符串
                 StringBuilder sb = new StringBuilder();
                 //追加类名
-                sb.append(method.getClass().getName());
+                sb.append(target.getClass().getName());
                 //追加方法名
-                sb.append(method.getName());
+                sb.append(":" + method.getName());
                 //遍历参数并且追加
                 for (Object obj : params) {
-                    sb.append(obj.toString());
+                    sb.append(":").append(obj.toString());
                 }
                 System.out.println("调用Redis缓存Key : " + sb.toString());
                 return sb.toString();
@@ -57,8 +60,12 @@ public class RedisConfig extends CachingConfigurerSupport {
      */
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        RedisCacheManager rcm = RedisCacheManager.create(connectionFactory);
-        return rcm;
+        // 设置缓存有效期一小时
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(120));
+        return RedisCacheManager
+                .builder(RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory))
+                .cacheDefaults(redisCacheConfiguration).build();
     }
 
     /**
