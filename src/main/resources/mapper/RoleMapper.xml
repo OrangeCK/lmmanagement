@@ -19,7 +19,11 @@
     <insert id="addUserAndRoleRelation" parameterType="Role">
         INSERT INTO `b_user_role_relation` (`user_id`, `role_id`, `s_cid`, `s_ct`, `s_uid`, `s_ut` )
         VALUES
-        (#{userId, jdbcType=BIGINT}, #{id, jdbcType=BIGINT}, #{creationBy, jdbcType=BIGINT}, #{creationDate, jdbcType=TIMESTAMP}, #{updatedBy, jdbcType=BIGINT}, #{updatedDate, jdbcType=TIMESTAMP});
+        (#{userId, jdbcType=BIGINT}, #{id, jdbcType=BIGINT}, #{creationBy, jdbcType=BIGINT}, #{creationDate, jdbcType=TIMESTAMP}, #{updatedBy, jdbcType=BIGINT}, #{updatedDate, jdbcType=TIMESTAMP})
     </insert>
+    <!--删除用户与角色之间的关系-->
+    <delete id="delUserAndRoleRelation" parameterType="java.lang.Long">
+        DELETE FROM b_user_role_relation WHERE user_id = #{userId, jdbcType=BIGINT}
+    </delete>
 </mapper>
 

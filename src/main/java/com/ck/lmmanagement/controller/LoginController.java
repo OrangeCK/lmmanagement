@@ -30,10 +30,19 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    /**
+     * 登录
+     * @param jsonStr 用户信息的json字符串
+     * @param session
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/goLogin", method = RequestMethod.POST)
     public ResultData login(@RequestBody String jsonStr, HttpSession session, HttpServletResponse response){
         JSONObject jsonObject = JSON.parseObject(jsonStr);
+        // 登录名
         String loginName = jsonObject.getString("loginName");
+        // 登录密码
         String password = jsonObject.getString("password");
         // 创建用户名和密码的令牌
         UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
@@ -59,6 +68,11 @@ public class LoginController {
         }
         return resultData;
     }
+
+    /**
+     *
+     * @return
+     */
     @RequestMapping(value = "/index", method = RequestMethod.POST)
     public ResultData loginInfo(){
         Subject subject = SecurityUtils.getSubject();

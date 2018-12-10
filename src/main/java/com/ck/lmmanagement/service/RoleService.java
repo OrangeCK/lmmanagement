@@ -15,4 +15,11 @@ public interface RoleService extends BaseService<Role>{
      * @return
      */
     Integer addUserAndRoleRelation(Role role);
+
+    /**
+     * 删除用户与角色之间的关系
+     * @param userId 用户id
+     * @return
+     */
+    Integer delUserAndRoleRelation(Long userId);
 }

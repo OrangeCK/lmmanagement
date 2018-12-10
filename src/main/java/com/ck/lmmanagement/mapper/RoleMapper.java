@@ -4,6 +4,8 @@ import com.ck.lmmanagement.domain.Role;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author 01378803
  * @date 2018/11/7 15:20
@@ -18,4 +20,11 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return
      */
     Integer addUserAndRoleRelation(Role role);
+
+    /**
+     * 删除用户与角色之间的关系
+     * @param userId 用户id
+     * @return
+     */
+    Integer delUserAndRoleRelation(Long userId);
 }

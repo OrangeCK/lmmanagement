@@ -21,4 +21,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
         super.basicForm(role);
         return roleMapper.addUserAndRoleRelation(role);
     }
+
+    @Override
+    public Integer delUserAndRoleRelation(Long userId) {
+        return roleMapper.delUserAndRoleRelation(userId);
+    }
 }
