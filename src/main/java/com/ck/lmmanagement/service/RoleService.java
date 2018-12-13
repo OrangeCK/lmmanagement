@@ -3,6 +3,8 @@ package com.ck.lmmanagement.service;
 
 import com.ck.lmmanagement.domain.Role;
 
+import java.util.Set;
+
 /**
  * @author 01378803
  * @date 2018/11/7 15:16
@@ -22,4 +24,11 @@ public interface RoleService extends BaseService<Role>{
      * @return
      */
     Integer delUserAndRoleRelation(Long userId);
+
+    /**
+     * 得到用户所有的角色set集合
+     * @param userId
+     * @return
+     */
+    Set<String> findAllRolesById(Long userId);
 }

@@ -1,8 +1,12 @@
 package com.ck.lmmanagement.config;
 
 import com.ck.lmmanagement.domain.Permission;
+import com.ck.lmmanagement.filter.JwtFilter;
 import com.ck.lmmanagement.service.PermissionService;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -12,20 +16,23 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.thymeleaf.util.StringUtils;
 
+import javax.servlet.Filter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author 01378803
- * @date 2018/11/7 18:08
- * Description  : shiro的配置文件
+ * @date 2018/12/12 14:30
+ * Description  :
  */
 @Configuration
-public class ShiroConfig {
-    private final static Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
+public class JwtShiroConfig {
+    private final static Logger logger = LoggerFactory.getLogger(JwtShiroConfig.class);
     @Autowired
     private PermissionService permissionService;
 
@@ -38,25 +45,27 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/images/**", "anon");
         filterChainDefinitionMap.put("/login/**", "anon");
-        filterChainDefinitionMap.put("/employee/**", "anon");
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/v2/api-docs", "anon");
         filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
         // 查询所有权限
-        List<Permission> permissionList =  permissionService.findData(null);
-        for(Permission permission : permissionList){
-            if(StringUtils.isEmpty(permission.getPermCode()) || StringUtils.isEmpty(permission.getResources())){
-                continue;
-            }
-            filterChainDefinitionMap.put(permission.getResources(), "perms[" + permission.getPermCode() + "]");
-        }
+//        List<Permission> permissionList =  permissionService.findData(null);
+//        for(Permission permission : permissionList){
+//            if(StringUtils.isEmpty(permission.getPermCode()) || StringUtils.isEmpty(permission.getResources())){
+//                continue;
+//            }
+//            filterChainDefinitionMap.put(permission.getResources(), "perms[" + permission.getPermCode() + "]");
+//        }
         logger.info("所有权限:{}", filterChainDefinitionMap);
-        filterChainDefinitionMap.put("/**", "authc");
-        // 配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
-        shiroFilterFactoryBean.setLoginUrl("/user/unlogin");
+        // 添加自己的过滤器并且取名为jwt
+        Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
+        filterMap.put("jwt", new JwtFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+        // 过滤链定义，从上向下顺序执行，一般将/**放在最为下边
+        filterChainDefinitionMap.put("/**", "jwt");
         // 未授权界面;
-        shiroFilterFactoryBean.setUnauthorizedUrl("/user/unauth");
+        filterChainDefinitionMap.put("/unauthorized/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -65,8 +74,8 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public ShiroRealm shiroRealm(){
-        ShiroRealm shiroRealm = new ShiroRealm();
+    public JwtShiroRealm shiroRealm(){
+        JwtShiroRealm shiroRealm = new JwtShiroRealm();
         return shiroRealm;
     }
     /**
@@ -77,24 +86,37 @@ public class ShiroConfig {
     public SecurityManager securityManager(){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(shiroRealm());
+        // 关闭shiro自带的session
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(subjectDAO);
         return securityManager;
     }
+
+    /**
+     * 下面的代码是添加注解支持
+     */
+    @Bean
+//    @DependsOn("lifecycleBeanPostProcessor")
     public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
         DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         advisorAutoProxyCreator.setProxyTargetClass(true);
         return advisorAutoProxyCreator;
     }
-    /**
-     * 开启shiro aop注解支持 使用代理方式所以需要开启代码支持
-     *  一定要写入上面advisorAutoProxyCreator（）自动代理。不然AOP注解不会生效
-     * @param securityManager
-     * @return
-     */
+
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
+//    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
     }
 
 }

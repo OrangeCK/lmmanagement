@@ -17,7 +17,7 @@ public enum LmEnum {
     /**
      * 返回json的code
      */
-    RETURN_NUM_200(200),RETURN_NUM_201(201),RETURN_NUM_202(202),RETURN_NUM_203(203),RETURN_NUM_204(204),
+    RETURN_NUM_200(200),RETURN_NUM_201(201),RETURN_NUM_202(202),RETURN_NUM_203(203),RETURN_NUM_401(401),
     /**
      * Redis的key常量
      */

@@ -33,6 +33,11 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
     }
 
     @Override
+    public String getPasswordByLoginName(String loginName) {
+        return employeeMapper.getPasswordByLoginName(loginName);
+    }
+
+    @Override
     public Employee saveForm(Employee employee) throws MyException{
         // 保存之前的校验
         employee = checkForm(employee);

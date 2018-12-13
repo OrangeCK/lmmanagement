@@ -26,5 +26,11 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      * @return
      */
     Employee loginAccountByLoginName(@Param("loginName") String loginName);
+    /**
+     * 通过登录账号得到密码
+     * @param loginName
+     * @return
+     */
+    String getPasswordByLoginName(String loginName);
 
 }

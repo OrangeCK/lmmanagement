@@ -15,6 +15,17 @@
             brr.role_id = fr.id
             AND brr.user_id = #{id}
     </select>
+    <!--根据用户id获取角色-->
+    <select id="findAllRolesById" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT
+            fr.role_code
+        FROM
+            b_user_role_relation brr,
+            m_fnd_role fr
+        WHERE
+            brr.role_id = fr.id
+            AND brr.user_id = #{id, jdbcType=BIGINT}
+    </select>
     <!--增加用户与角色之前的关系-->
     <insert id="addUserAndRoleRelation" parameterType="Role">
         INSERT INTO `b_user_role_relation` (`user_id`, `role_id`, `s_cid`, `s_ct`, `s_uid`, `s_ut` )

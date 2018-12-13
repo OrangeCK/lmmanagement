@@ -23,4 +23,11 @@ public interface EmployeeService extends BaseService<Employee> {
      * @return
      */
     Employee loginAccountByLoginName(String loginName);
+
+    /**
+     * 通过登录账号得到密码
+     * @param loginName
+     * @return
+     */
+    String getPasswordByLoginName(String loginName);
 }

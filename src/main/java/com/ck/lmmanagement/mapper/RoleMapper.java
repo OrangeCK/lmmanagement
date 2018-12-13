@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 01378803
@@ -27,4 +28,11 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return
      */
     Integer delUserAndRoleRelation(Long userId);
+
+    /**
+     * 得到用户所有的角色set集合
+     * @param userId 用户id
+     * @return
+     */
+    Set<String> findAllRolesById(Long userId);
 }

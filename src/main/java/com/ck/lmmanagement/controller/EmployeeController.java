@@ -10,6 +10,7 @@ import com.ck.lmmanagement.util.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import java.io.StringWriter;
  */
 @RestController
 @RequestMapping("/employee")
-@CacheConfig(cacheNames = "employee")
+//@CacheConfig(cacheNames = "employee")
 @Api(description = "用户管理的相关接口")
 public class EmployeeController {
     private final static Logger logger = LoggerFactory.getLogger(EmployeeController.class);
@@ -43,7 +44,8 @@ public class EmployeeController {
      * @param employee 用户对象
      * @return 分页工具类
      */
-    @Cacheable()
+//    @Cacheable()
+    @RequiresRoles("user")
     @ApiOperation(value = "用户的分页查询", notes = "用户的分页查询")
     @ApiImplicitParam(name = "employee",value = "用户信息",required = true,paramType = "body",dataType = "Employee")
     @RequestMapping(value = "/employeePageList", method = RequestMethod.POST)
@@ -66,7 +68,7 @@ public class EmployeeController {
             if(employee.isEnableFlag()){
                 return new ResultData("新增成功");
             }else{
-                return new ResultData(LmEnum.RETURN_NUM_204.getNum(),"fail", "新增失败");
+                return new ResultData(LmEnum.RETURN_NUM_201.getNum(),"fail", "新增失败");
             }
         } catch (MyException e) {
             StringWriter sw = new StringWriter();
@@ -91,7 +93,7 @@ public class EmployeeController {
             if(employee.isEnableFlag()){
                 return new ResultData("更新成功");
             }else{
-                return new ResultData(LmEnum.RETURN_NUM_204.getNum(),"fail", "更新失败");
+                return new ResultData(LmEnum.RETURN_NUM_201.getNum(),"fail", "更新失败");
             }
         } catch (MyException e) {
             StringWriter sw = new StringWriter();

@@ -27,6 +27,10 @@
         WHERE
             fu.login_name = #{loginName}
     </select>
+    <!--根据登录名取得登录密码-->
+    <select id="getPasswordByLoginName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT fu.password FROM m_fnd_user fu WHERE fu.login_name = #{loginName, jdbcType=VARCHAR} limit 1
+    </select>
     <!--分页查询-->
     <select id="findPageData" parameterType="Employee" resultType="Employee">
         SELECT
