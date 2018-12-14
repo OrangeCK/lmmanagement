@@ -2,6 +2,8 @@ package com.ck.lmmanagement.exception;
 
 import com.ck.lmmanagement.constant.LmConstant;
 import com.ck.lmmanagement.constant.LmEnum;
+import org.apache.shiro.ShiroException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -64,7 +67,7 @@ public class MyBasicErrorController extends AbstractErrorController {
 
     @RequestMapping
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> error(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> body = getErrorAttributes(request,
                 isIncludeStackTrace(request, MediaType.ALL));
         Map map = new HashMap<String, Object>();
@@ -72,6 +75,7 @@ public class MyBasicErrorController extends AbstractErrorController {
         map.put("code", body.get("status"));
         map.put("status",  "fail");
         map.put("time", body.get("timestamp"));
+        map.put("error", body.get("message"));
         HttpStatus status = this.getStatus(request);
         logHandler(body);
         return new ResponseEntity(map, status);

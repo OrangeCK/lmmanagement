@@ -39,8 +39,6 @@ public class LoginController {
     /**
      * 登录
      * @param jsonStr 用户信息的json字符串
-     * @param session
-     * @param response
      * @return
      */
     @RequestMapping(value = "/goLogin", method = RequestMethod.POST)
@@ -60,4 +58,8 @@ public class LoginController {
         }
     }
 
+    @RequestMapping(value = "/unAuthorization", method = RequestMethod.POST)
+    public ResultData unAuthorization(){
+        return new ResultData(LmEnum.RETURN_NUM_401.getNum(), "fail", "登录身份验证错误");
+    }
 }

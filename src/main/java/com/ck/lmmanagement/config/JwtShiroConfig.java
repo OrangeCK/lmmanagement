@@ -49,14 +49,6 @@ public class JwtShiroConfig {
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/v2/api-docs", "anon");
         filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
-        // 查询所有权限
-//        List<Permission> permissionList =  permissionService.findData(null);
-//        for(Permission permission : permissionList){
-//            if(StringUtils.isEmpty(permission.getPermCode()) || StringUtils.isEmpty(permission.getResources())){
-//                continue;
-//            }
-//            filterChainDefinitionMap.put(permission.getResources(), "perms[" + permission.getPermCode() + "]");
-//        }
         logger.info("所有权限:{}", filterChainDefinitionMap);
         // 添加自己的过滤器并且取名为jwt
         Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
@@ -66,6 +58,8 @@ public class JwtShiroConfig {
         filterChainDefinitionMap.put("/**", "jwt");
         // 未授权界面;
         filterChainDefinitionMap.put("/unauthorized/**", "anon");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/login/unAuthorization");
+        shiroFilterFactoryBean.setLoginUrl("/login/unAuthorization");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -99,7 +93,7 @@ public class JwtShiroConfig {
      * 下面的代码是添加注解支持
      */
     @Bean
-//    @DependsOn("lifecycleBeanPostProcessor")
+    @DependsOn({"lifecycleBeanPostProcessor"})
     public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
         DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         advisorAutoProxyCreator.setProxyTargetClass(true);
@@ -111,7 +105,6 @@ public class JwtShiroConfig {
         return new LifecycleBeanPostProcessor();
     }
 
-//    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();

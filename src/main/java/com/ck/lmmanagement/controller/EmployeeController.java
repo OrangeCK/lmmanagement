@@ -10,6 +10,8 @@ import com.ck.lmmanagement.util.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +48,13 @@ public class EmployeeController {
      */
 //    @Cacheable()
     @RequiresRoles("user")
+    @RequiresPermissions("employeePageList")
     @ApiOperation(value = "用户的分页查询", notes = "用户的分页查询")
     @ApiImplicitParam(name = "employee",value = "用户信息",required = true,paramType = "body",dataType = "Employee")
     @RequestMapping(value = "/employeePageList", method = RequestMethod.POST)
     public PageList<Employee> employeePageList(@RequestBody Employee employee){
+        employee = null;
+        employee.isEnableFlag();
         return employeeService.getPageList(employee);
     }
 
