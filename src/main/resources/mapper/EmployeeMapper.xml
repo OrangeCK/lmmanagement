@@ -11,8 +11,8 @@
         FROM
             m_fnd_user fu
         WHERE
-            fu.login_name = #{loginName}
-            AND fu.password = #{password}
+            fu.login_name = #{loginName, jdbcType=VARCHAR}
+            AND fu.password = #{password, jdbcType=VARCHAR}
     </select>
     <!--验证是否有这个用户-->
     <select id="loginAccountByLoginName" parameterType="java.lang.String" resultType="Employee">
@@ -25,12 +25,23 @@
         FROM
             m_fnd_user fu
         WHERE
-            fu.login_name = #{loginName}
+            fu.login_name = #{loginName, jdbcType=VARCHAR}
     </select>
     <!--根据登录名取得登录密码-->
     <select id="getPasswordByLoginName" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT fu.password FROM m_fnd_user fu WHERE fu.login_name = #{loginName, jdbcType=VARCHAR} limit 1
     </select>
+    <sql id="pageCondition">
+        <where>
+            fu.enable_flag = 'Y'
+            <if test="userName != null and userName != ''">
+                AND fu.user_name LIKE CONCAT(#{userName, jdbcType=VARCHAR},'%')
+            </if>
+            <if test="loginName != null and loginName != ''">
+                AND fu.login_name LIKE CONCAT(#{loginName, jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </sql>
     <!--分页查询-->
     <select id="findPageData" parameterType="Employee" resultType="Employee">
         SELECT
@@ -45,6 +56,8 @@
             fu.s_ct creationDate
         FROM
             m_fnd_user fu
+        <include refid="pageCondition"/>
+        limit #{start, jdbcType=INTEGER}, #{end, jdbcType=INTEGER}
     </select>
     <!--分页查询总数-->
     <select id="findPageTotal" parameterType="Employee" resultType="java.lang.Integer">
@@ -52,6 +65,7 @@
             COUNT(1)
         FROM
             m_fnd_user fu
+        <include refid="pageCondition"/>
     </select>
     <!--新增用户信息-->
     <insert id="saveForm" parameterType="Employee">

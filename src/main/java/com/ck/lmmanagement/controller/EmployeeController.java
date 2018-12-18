@@ -47,14 +47,12 @@ public class EmployeeController {
      * @return 分页工具类
      */
 //    @Cacheable()
-    @RequiresRoles("user")
+    @RequiresRoles("admin")
     @RequiresPermissions("employeePageList")
     @ApiOperation(value = "用户的分页查询", notes = "用户的分页查询")
     @ApiImplicitParam(name = "employee",value = "用户信息",required = true,paramType = "body",dataType = "Employee")
     @RequestMapping(value = "/employeePageList", method = RequestMethod.POST)
     public PageList<Employee> employeePageList(@RequestBody Employee employee){
-        employee = null;
-        employee.isEnableFlag();
         return employeeService.getPageList(employee);
     }
 
