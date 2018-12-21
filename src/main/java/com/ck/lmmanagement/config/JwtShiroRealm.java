@@ -86,7 +86,7 @@ public class JwtShiroRealm extends AuthorizingRealm {
         // 获取用户名和密码
         String loginName = JwtUtil.getLoginName(token);
         if(loginName == null){
-            throw new AuthenticationException("token认证失败");
+            throw new AccountException("token身份认证失败，token格式不正确");
         }
         // 与数据库数据进行匹配校验
         Employee employee = employeeService.loginAccountByLoginName(loginName);
@@ -94,7 +94,7 @@ public class JwtShiroRealm extends AuthorizingRealm {
             throw new UnknownAccountException("该用户不存在");
         }
         if(!JwtUtil.verify(token, loginName, employee.getPassword())){
-            throw new UnknownAccountException("用户名或密码错误");
+            throw new IncorrectCredentialsException("token身份认证失败，token失效");
         }
         return new SimpleAuthenticationInfo(token, token, getName());
     }

@@ -1,7 +1,6 @@
 package com.ck.lmmanagement.filter;
 
 import com.ck.lmmanagement.domain.JwtToken;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+
 
 /**
  * @author 01378803
@@ -61,7 +59,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         String token = httpServletRequest.getHeader("Authorization");
         JwtToken jwtToken = new JwtToken(token);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
-        getSubject(request, response).login(jwtToken);
+        try {
+            getSubject(request, response).login(jwtToken);
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+        }
         // 如果没有抛出异常则代表登入成功，返回true
         return true;
     }
