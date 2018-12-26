@@ -65,6 +65,10 @@ public class ResultData {
         this.msg = msg;
     }
 
+    public ResultData(Object obj){
+        this.data = obj;
+    }
+
     public ResultData(String status, String msg){
         this.status = status;
         if(StringUtils.isEmpty(status)){

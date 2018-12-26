@@ -51,7 +51,7 @@ public class JwtShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         logger.info("权限验证");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        String loginName = JwtUtil.getLoginName(principalCollection.toString());
+        String loginName = JwtUtil.getLoginName(principalCollection.toString(), "loginName");
         if(loginName != null){
             // 与数据库数据进行匹配校验
             Employee employee = employeeService.loginAccountByLoginName(loginName);
@@ -84,18 +84,18 @@ public class JwtShiroRealm extends AuthorizingRealm {
         logger.info("用户验证");
         String token = (String) authenticationToken.getCredentials();
         // 获取用户名和密码
-        String loginName = JwtUtil.getLoginName(token);
-        if(loginName == null){
-            throw new AccountException("token身份认证失败，token格式不正确");
-        }
-        // 与数据库数据进行匹配校验
+        String loginName = JwtUtil.getLoginName(token, "loginName");
+//        if(loginName == null){
+//            throw new AccountException("token身份认证失败，token格式不正确");
+//        }
+//        // 与数据库数据进行匹配校验
         Employee employee = employeeService.loginAccountByLoginName(loginName);
         if(null == employee){
             throw new UnknownAccountException("该用户不存在");
         }
-        if(!JwtUtil.verify(token, loginName, employee.getPassword())){
-            throw new IncorrectCredentialsException("token身份认证失败，token失效");
-        }
+//        if(!JwtUtil.verify(token, loginName, employee.getPassword())){
+//            throw new IncorrectCredentialsException("token身份认证失败，token失效");
+//        }
         return new SimpleAuthenticationInfo(token, token, getName());
     }
 }

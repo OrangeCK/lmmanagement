@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 01378803
@@ -54,7 +56,10 @@ public class LoginController {
         }else if(!realPassword.equals(password)){
             return new ResultData(LmEnum.RETURN_NUM_401.getNum(), "fail", "密码错误");
         }else{
-            return new ResultData(JwtUtil.sign(loginName, password));
+            Map<String, String> map = new HashMap<>();
+            map.put("Authorization",JwtUtil.sign(loginName));
+            map.put("Refresh_Token",JwtUtil.refreshSign(loginName, realPassword));
+            return new ResultData(map);
         }
     }
 
