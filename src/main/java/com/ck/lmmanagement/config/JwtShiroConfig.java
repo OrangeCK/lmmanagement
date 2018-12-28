@@ -49,6 +49,7 @@ public class JwtShiroConfig {
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/v2/api-docs", "anon");
         filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
+        filterChainDefinitionMap.put("/**", "authc");
         logger.info("所有权限:{}", filterChainDefinitionMap);
         // 添加自己的过滤器并且取名为jwt
         Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
@@ -57,7 +58,6 @@ public class JwtShiroConfig {
         // 过滤链定义，从上向下顺序执行，一般将/**放在最为下边
         filterChainDefinitionMap.put("/**", "jwt");
         // 未授权界面;
-        filterChainDefinitionMap.put("/unauthorized/**", "anon");
         shiroFilterFactoryBean.setUnauthorizedUrl("/login/unAuthorization");
         shiroFilterFactoryBean.setLoginUrl("/login/unAuthorization");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

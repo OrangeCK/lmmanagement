@@ -18,10 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -61,6 +58,8 @@ public class EmployeeController {
      * @param employee 用户对象
      * @return 返回结果类
      */
+    @RequiresRoles("admin")
+    @RequiresPermissions("addEmployee")
     @ApiOperation(value = "新增用户", notes = "新增用户")
     @ApiImplicitParam(name = "employee",value="用户信息",required = true,paramType = "body",dataType = "Employee")
     @RequestMapping(value = "/addEmployee", method = RequestMethod.POST)
@@ -71,7 +70,7 @@ public class EmployeeController {
             if(employee.isEnableFlag()){
                 return new ResultData("新增成功");
             }else{
-                return new ResultData(LmEnum.RETURN_NUM_201.getNum(),"fail", "新增失败");
+                return new ResultData(LmEnum.RETURN_NUM_201.getNum(),"fail", employee.getReturnMsg());
             }
         } catch (MyException e) {
             StringWriter sw = new StringWriter();
@@ -86,6 +85,8 @@ public class EmployeeController {
      * @param employee 用户对象
      * @return 返回结果类
      */
+    @RequiresRoles("admin")
+    @RequiresPermissions("updateEmployee")
     @ApiOperation(value = "更新用户", notes = "更新用户")
     @ApiImplicitParam(name = "employee",value="用户信息",required = true,paramType = "body",dataType = "Employee")
     @RequestMapping(value = "/updateEmployee", method = RequestMethod.POST)
@@ -96,13 +97,33 @@ public class EmployeeController {
             if(employee.isEnableFlag()){
                 return new ResultData("更新成功");
             }else{
-                return new ResultData(LmEnum.RETURN_NUM_201.getNum(),"fail", "更新失败");
+                return new ResultData(LmEnum.RETURN_NUM_201.getNum(),"fail", employee.getReturnMsg());
             }
         } catch (MyException e) {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw, true));
             logger.error(e.getMsg() + sw.toString());
             return new ResultData(LmEnum.RETURN_NUM_202.getNum(), "fail", e.getMsg());
+        }
+    }
+
+    /**
+     * 失效用户
+     * @param id 用户id
+     * @return
+     */
+    @RequiresRoles("admin")
+    @RequiresPermissions("disableEmployee")
+    @ApiOperation(value = "失效用户", notes = "失效用户")
+    @ApiImplicitParam(name = "id",value="用户id",required = true,paramType = "query", dataType = "Long")
+    @RequestMapping(value = "/disableEmployee", method = RequestMethod.POST)
+    public ResultData disableEmployee(@RequestParam Long id){
+        logger.info("正在删除用户");
+        int count = employeeService.updateToDisable(id);
+        if(count > 0){
+            return new ResultData();
+        }else{
+            return new ResultData("fail", "操作失败");
         }
     }
 }

@@ -61,17 +61,17 @@ public interface BaseMapper<T extends BaseForm> {
 
     /**
      * 删除
-     * @param form
+     * @param id
      * @return
      */
-    Integer deleteForm(T form);
+    Integer deleteForm(Long id);
 
     /**
      * 失效
-     * @param form
+     * @param id
      * @return
      */
-    Integer updateToDisable(T form);
+    Integer updateToDisable(Long id);
 
     /**
      * 重新置为有效

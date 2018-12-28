@@ -52,7 +52,8 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
                     roleService.addUserAndRoleRelation(role);
                 }
             }else{
-                throw new MyException("新增用户失败，用户ID为为空");
+                employee.setEnableFlag(false);
+                employee.setReturnMsg("新增用户失败，用户ID为为空");
             }
         }
         return employee;
@@ -75,7 +76,8 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
                     roleService.addUserAndRoleRelation(role);
                 }
             }else{
-                throw new MyException("更新用户失败，用户ID为为空");
+                employee.setEnableFlag(false);
+                employee.setReturnMsg("更新用户失败，用户ID为为空");
             }
         }
         return employee;

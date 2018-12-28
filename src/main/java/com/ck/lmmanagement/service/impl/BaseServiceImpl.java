@@ -63,13 +63,15 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     }
 
     @Override
-    public Integer deleteForm(T form) {
-        return null;
+    public Integer deleteForm(Long id) {
+        int count = baseMapper.deleteForm(id);
+        return count;
     }
 
     @Override
-    public Integer updateToDisable(T form) {
-        return null;
+    public Integer updateToDisable(Long id) {
+        int count = baseMapper.updateToDisable(id);
+        return count;
     }
 
     @Override

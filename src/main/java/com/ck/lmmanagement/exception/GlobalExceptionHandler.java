@@ -31,8 +31,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ShiroException.class)
     @ResponseBody
-    public ResultData handleShiroException(ShiroException e) {
+    public ResultData handleShiroException(ShiroException e, HttpServletResponse response) {
         String eName = e.getClass().getSimpleName();
+        response.setStatus(401);
         return new ResultData(401, "fail","鉴权或授权过程出错");
     }
 
@@ -41,6 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResultData page401(UnauthenticatedException e, HttpServletResponse response) {
         String eMsg = e.getMessage();
         if (StringUtils.startsWithIgnoreCase(eMsg,GUEST_ONLY)){
+            response.setStatus(403);
             return new ResultData(403, "fail","只允许游客访问，若您已登录，请先退出登录");
         }else{
             response.setStatus(401);
@@ -50,7 +52,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseBody
-    public ResultData page403() {
+    public ResultData page403(HttpServletResponse response) {
+        response.setStatus(403);
         return new ResultData(403, "fail", "用户没有访问权限");
     }
 
