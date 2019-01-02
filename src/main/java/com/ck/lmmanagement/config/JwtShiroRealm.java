@@ -1,5 +1,8 @@
 package com.ck.lmmanagement.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.Employee;
 import com.ck.lmmanagement.domain.JwtToken;
 import com.ck.lmmanagement.domain.Permission;
@@ -8,6 +11,7 @@ import com.ck.lmmanagement.service.EmployeeService;
 import com.ck.lmmanagement.service.PermissionService;
 import com.ck.lmmanagement.service.RoleService;
 import com.ck.lmmanagement.util.JwtUtil;
+import com.ck.lmmanagement.util.RedisUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -17,8 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 01378803
@@ -33,6 +36,8 @@ public class JwtShiroRealm extends AuthorizingRealm {
     private PermissionService permissionService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * jwt整合shiro必须重写此方法，不然Shiro会报错，限定这个Realm只支持我们自定义的JWT Token
@@ -51,16 +56,53 @@ public class JwtShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         logger.info("权限验证");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        String loginName = JwtUtil.getLoginName(principalCollection.toString(), "loginName");
+        String loginName = JwtUtil.getLoginName(principalCollection.toString(), LmEnum.LOGIN_NAME.getName());
         if(loginName != null){
-            // 与数据库数据进行匹配校验
-            Employee employee = employeeService.loginAccountByLoginName(loginName);
+            boolean employeeExist = false;
+            employeeExist = redisUtil.hHasKey(principalCollection.toString(), LmEnum.USER_INFO.getName());
+            Employee employee = null;
+            if(!employeeExist){
+                // 与数据库数据进行匹配校验
+                employee = employeeService.loginAccountByLoginName(loginName);
+            }else{
+                employee = JSON.parseObject(redisUtil.hget(principalCollection.toString(), LmEnum.USER_INFO.getName()).toString(), Employee.class);
+            }
             try {
+                boolean roleSetExist = false;
+                roleSetExist = redisUtil.hHasKey(principalCollection.toString(), LmEnum.ROLES.getName());
+                Set<String> roleSet = null;
+                if(!roleSetExist){
+                    roleSet = roleService.findAllRolesById(employee.getId());
+                    Iterator<String> it = roleSet.iterator();
+                    StringBuilder sb = new StringBuilder();
+                    while (it.hasNext()){
+                        sb.append(it.next() + ",");
+                    }
+                    String roleArray = sb.toString().substring(0, sb.toString().length()-1);
+                    redisUtil.hset(principalCollection.toString(), LmEnum.ROLES.getName(), roleArray, LmEnum.LOGIN_INFO_EXPIRE.getNum());
+                }else{
+                    String[] roleArray = redisUtil.hget(principalCollection.toString(), LmEnum.ROLES.getName()).toString().split(",");
+                    roleSet = new HashSet<>(Arrays.asList(roleArray));
+                }
                 // 注入角色
-                Set<String> roleSet = roleService.findAllRolesById(employee.getId());
                 authorizationInfo.setRoles(roleSet);
+                boolean permSetExist = false;
+                permSetExist = redisUtil.hHasKey(principalCollection.toString(), LmEnum.PERMISSIONS.getName());
+                Set<String> permissionSet = null;
+                if(!permSetExist){
+                    permissionSet = permissionService.findAllPermissionsById(employee.getId());
+                    Iterator<String> it = permissionSet.iterator();
+                    StringBuilder sb = new StringBuilder();
+                    while (it.hasNext()){
+                        sb.append(it.next() + ",");
+                    }
+                    String permArray = sb.toString().substring(0, sb.toString().length()-1);
+                    redisUtil.hset(principalCollection.toString(), LmEnum.PERMISSIONS.getName(), permArray, LmEnum.LOGIN_INFO_EXPIRE.getNum());
+                }else{
+                    String[] permArray = redisUtil.hget(principalCollection.toString(), LmEnum.PERMISSIONS.getName()).toString().split(",");
+                    permissionSet = new HashSet<>(Arrays.asList(permArray));
+                }
                 // 注入权限
-                Set<String> permissionSet = permissionService.findAllPermissionsById(employee.getId());
                 authorizationInfo.setStringPermissions(permissionSet);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -84,18 +126,19 @@ public class JwtShiroRealm extends AuthorizingRealm {
         logger.info("用户验证");
         String token = (String) authenticationToken.getCredentials();
         // 获取用户名和密码
-        String loginName = JwtUtil.getLoginName(token, "loginName");
-//        if(loginName == null){
-//            throw new AccountException("token身份认证失败，token格式不正确");
-//        }
-//        // 与数据库数据进行匹配校验
-        Employee employee = employeeService.loginAccountByLoginName(loginName);
-        if(null == employee){
-            throw new UnknownAccountException("该用户不存在");
+        String loginName = JwtUtil.getLoginName(token, LmEnum.LOGIN_NAME.getName());
+        boolean loginNameExist = false;
+        loginNameExist = redisUtil.hHasKey(token, LmEnum.USER_INFO.getName());
+        // redis校验是否存在这个key
+        if(!loginNameExist){
+            // 与数据库数据进行匹配校验
+            Employee employee = employeeService.loginAccountByLoginName(loginName);
+            if(null == employee){
+                throw new UnknownAccountException("该用户不存在");
+            }else{
+                redisUtil.hset(token, LmEnum.USER_INFO.getName(), JSON.toJSONString(employee), LmEnum.LOGIN_INFO_EXPIRE.getNum());
+            }
         }
-//        if(!JwtUtil.verify(token, loginName, employee.getPassword())){
-//            throw new IncorrectCredentialsException("token身份认证失败，token失效");
-//        }
         return new SimpleAuthenticationInfo(token, token, getName());
     }
 }

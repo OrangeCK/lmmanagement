@@ -21,7 +21,16 @@ public enum LmEnum {
     /**
      * Redis的key常量
      */
-    MODULE_EMPLOYEE("LM:employee");
+    MODULE_EMPLOYEE("LM:employee"),
+    /**
+     * Redis的缓存时间
+     */
+    LOGIN_INFO_EXPIRE(300),
+    /**
+     * 常量名
+     */
+    AUTHORIZATION("Authorization"),REFRESH_TOKEN("Refresh_Token"),LOGIN_NAME("loginName"),PASSWORD("password"),USER_INFO("userInfo"),ROLES("roles"),PERMISSIONS("permissions");
+    ;
     private Integer num;
     /**
      * name

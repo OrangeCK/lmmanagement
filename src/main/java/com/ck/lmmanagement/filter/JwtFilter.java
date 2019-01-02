@@ -1,5 +1,6 @@
 package com.ck.lmmanagement.filter;
 
+import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.JwtToken;
 import com.ck.lmmanagement.util.JwtUtil;
 import org.apache.shiro.authc.AuthenticationException;
@@ -35,7 +36,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         // 得到header中的token
-        String token = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
+        String token = httpServletRequest.getHeader(LmEnum.AUTHORIZATION.getName());
         // 判断请求头上是否带有token
         if(token != null){
             // 如果存在token,则进入executeLogin方法检查token是否正确
@@ -61,22 +62,22 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         // 得到header中的token
-        String token = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
+        String token = httpServletRequest.getHeader(LmEnum.AUTHORIZATION.getName());
         try {
             // 获取用户名和密码
-            String loginName = JwtUtil.getLoginName(token, "loginName");
+            String loginName = JwtUtil.getLoginName(token, LmEnum.LOGIN_NAME.getName());
             if(loginName == null){
                 throw new AuthenticationException("token身份认证失败，token格式不正确");
             }
             // 验证token是否失效
             if(!JwtUtil.verify(token, loginName)){
-                String refreshToken = httpServletRequest.getHeader("Refresh_Token");
-                String refreshLoginName = JwtUtil.getLoginName(refreshToken, "loginName");
-                String refreshPassword = JwtUtil.getLoginName(refreshToken, "password");
+                String refreshToken = httpServletRequest.getHeader(LmEnum.REFRESH_TOKEN.getName());
+                String refreshLoginName = JwtUtil.getLoginName(refreshToken, LmEnum.LOGIN_NAME.getName());
+                String refreshPassword = JwtUtil.getLoginName(refreshToken, LmEnum.PASSWORD.getName());
                 // 若token失效，则校验refreshToken,若没有失效则生成一个新的token
                 if(JwtUtil.refreshVerify(refreshToken, refreshLoginName, refreshPassword)){
                     token = JwtUtil.sign(loginName);
-                    ((HttpServletResponse) response).setHeader(AUTHORIZATION_HEADER, token);
+                    ((HttpServletResponse) response).setHeader(LmEnum.AUTHORIZATION.getName(), token);
                 }else{
                     throw new IncorrectCredentialsException("token身份认证失败，token失效");
                 }

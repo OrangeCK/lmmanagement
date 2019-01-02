@@ -5,6 +5,7 @@ import com.ck.lmmanagement.domain.PageList;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.mapper.BaseMapper;
 import com.ck.lmmanagement.service.BaseService;
+import com.ck.lmmanagement.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ import java.util.List;
 public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     @Autowired
     private BaseMapper<T> baseMapper;
+    @Autowired
+    private RedisUtil redisUtil;
+
     @Override
     public PageList<T> getPageList(T query) {
         int total = baseMapper.findPageTotal(query);
