@@ -1,12 +1,9 @@
 package com.ck.lmmanagement.config;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.Employee;
 import com.ck.lmmanagement.domain.JwtToken;
-import com.ck.lmmanagement.domain.Permission;
-import com.ck.lmmanagement.domain.Role;
 import com.ck.lmmanagement.service.EmployeeService;
 import com.ck.lmmanagement.service.PermissionService;
 import com.ck.lmmanagement.service.RoleService;
@@ -68,24 +65,7 @@ public class JwtShiroRealm extends AuthorizingRealm {
                 employee = JSON.parseObject(redisUtil.hget(principalCollection.toString(), LmEnum.USER_INFO.getName()).toString(), Employee.class);
             }
             try {
-                boolean roleSetExist = false;
-                roleSetExist = redisUtil.hHasKey(principalCollection.toString(), LmEnum.ROLES.getName());
-                Set<String> roleSet = null;
-                if(!roleSetExist){
-                    roleSet = roleService.findAllRolesById(employee.getId());
-                    Iterator<String> it = roleSet.iterator();
-                    StringBuilder sb = new StringBuilder();
-                    while (it.hasNext()){
-                        sb.append(it.next() + ",");
-                    }
-                    String roleArray = sb.toString().substring(0, sb.toString().length()-1);
-                    redisUtil.hset(principalCollection.toString(), LmEnum.ROLES.getName(), roleArray, LmEnum.LOGIN_INFO_EXPIRE.getNum());
-                }else{
-                    String[] roleArray = redisUtil.hget(principalCollection.toString(), LmEnum.ROLES.getName()).toString().split(",");
-                    roleSet = new HashSet<>(Arrays.asList(roleArray));
-                }
-                // 注入角色
-                authorizationInfo.setRoles(roleSet);
+                // 查看redis中是否存在，否则从新数据库查询再保存到redis中
                 boolean permSetExist = false;
                 permSetExist = redisUtil.hHasKey(principalCollection.toString(), LmEnum.PERMISSIONS.getName());
                 Set<String> permissionSet = null;

@@ -46,7 +46,6 @@ public class EmployeeController {
      * @return 分页工具类
      */
     @Cacheable()
-    @RequiresRoles("admin")
     @RequiresPermissions("employeePageList")
     @ApiOperation(value = "用户的分页查询", notes = "用户的分页查询")
     @ApiImplicitParam(name = "employee",value = "用户信息",required = true,paramType = "body",dataType = "Employee")
@@ -60,7 +59,6 @@ public class EmployeeController {
      * @param employee 用户对象
      * @return 返回结果类
      */
-    @RequiresRoles("admin")
     @RequiresPermissions("addEmployee")
     @ApiOperation(value = "新增用户", notes = "新增用户")
     @ApiImplicitParam(name = "employee",value="用户信息",required = true,paramType = "body",dataType = "Employee")
@@ -89,7 +87,6 @@ public class EmployeeController {
      * @param employee 用户对象
      * @return 返回结果类
      */
-    @RequiresRoles("admin")
     @RequiresPermissions("updateEmployee")
     @ApiOperation(value = "更新用户", notes = "更新用户")
     @ApiImplicitParam(name = "employee",value="用户信息",required = true,paramType = "body",dataType = "Employee")
@@ -116,7 +113,6 @@ public class EmployeeController {
      * @param id 用户id
      * @return
      */
-    @RequiresRoles("admin")
     @RequiresPermissions("disableEmployee")
     @ApiOperation(value = "失效用户", notes = "失效用户")
     @ApiImplicitParam(name = "id",value="用户id",required = true,paramType = "query", dataType = "Long")
@@ -137,8 +133,8 @@ public class EmployeeController {
      * @return
      */
     private Employee getCurrentUser(HttpServletRequest request){
-        String loginName = JwtUtil.getLoginName(request.getHeader(LmEnum.AUTHORIZATION.getName()), LmEnum.LOGIN_NAME.getName());
-        Employee employee = JSON.parseObject(redisUtil.get(loginName).toString(), Employee.class);
+        String token = request.getHeader(LmEnum.AUTHORIZATION.getName());
+        Employee employee = JSON.parseObject(redisUtil.hget(token, LmEnum.USER_INFO.getName()).toString(), Employee.class);
         return employee;
     }
 }

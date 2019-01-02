@@ -71,16 +71,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             }
             // 验证token是否失效
             if(!JwtUtil.verify(token, loginName)){
-                String refreshToken = httpServletRequest.getHeader(LmEnum.REFRESH_TOKEN.getName());
-                String refreshLoginName = JwtUtil.getLoginName(refreshToken, LmEnum.LOGIN_NAME.getName());
-                String refreshPassword = JwtUtil.getLoginName(refreshToken, LmEnum.PASSWORD.getName());
-                // 若token失效，则校验refreshToken,若没有失效则生成一个新的token
-                if(JwtUtil.refreshVerify(refreshToken, refreshLoginName, refreshPassword)){
-                    token = JwtUtil.sign(loginName);
-                    ((HttpServletResponse) response).setHeader(LmEnum.AUTHORIZATION.getName(), token);
-                }else{
-                    throw new IncorrectCredentialsException("token身份认证失败，token失效");
-                }
+                throw new IncorrectCredentialsException("token身份认证失败，token失效");
             }
             // 提交给realm进行登入，如果错误他会抛出异常并被捕获
             JwtToken jwtToken = new JwtToken(token);

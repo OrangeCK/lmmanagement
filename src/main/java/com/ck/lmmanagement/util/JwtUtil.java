@@ -17,7 +17,7 @@ public class JwtUtil {
     /**
      * token的有效时间
      */
-    private static final long EXPIRE_TIME = 5 * 60 * 1000;
+    private static final long EXPIRE_TIME = 30 * 60 * 1000;
     /**
      * token的有效时间
      */
