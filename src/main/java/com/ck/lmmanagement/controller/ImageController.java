@@ -2,6 +2,7 @@ package com.ck.lmmanagement.controller;
 
 import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.Image;
+import com.ck.lmmanagement.domain.PageList;
 import com.ck.lmmanagement.domain.ResultData;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.service.ImageService;
@@ -28,12 +29,30 @@ public class ImageController {
     private final static Logger logger = LoggerFactory.getLogger(ImageController.class);
     @Autowired
     ImageService imageService;
-    @RequestMapping(value = "/addImage", method = RequestMethod.POST)
-    public ResultData addImage(@RequestBody Image image, HttpServletRequest request){
+
+
+    /**
+     * 分页查询
+     * @param image 图片信息
+     * @return
+     */
+    @RequestMapping(value = "/imagePageList", method = RequestMethod.POST)
+    public PageList<Image> imagePageList(@RequestBody Image image){
+        return imageService.getPageList(image);
+    }
+
+    /**
+     * 新增图片信息
+     * @param image 图片信息
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/updateImage", method = RequestMethod.POST)
+    public ResultData updateImage(@RequestBody Image image, HttpServletRequest request){
         try {
-            image = imageService.saveForm(image);
+            image = imageService.updateForm(image);
             if(image.isEnableFlag()){
-                return new ResultData();
+                return new ResultData(image);
             }else{
                 return new ResultData("fail", image.getReturnMsg());
             }
@@ -41,7 +60,30 @@ public class ImageController {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw, true));
             logger.error(e.getMsg() + sw.toString());
-            return new ResultData(LmEnum.RETURN_NUM_202.getNum(), "fail", e.getMsg());
+            return new ResultData(LmEnum.RETURN_NUM_200.getNum(), "fail", e.getMsg());
+        }
+    }
+
+    /**
+     * 新增图片信息
+     * @param image 图片信息
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/addImage", method = RequestMethod.POST)
+    public ResultData addImage(@RequestBody Image image, HttpServletRequest request){
+        try {
+            image = imageService.saveForm(image);
+            if(image.isEnableFlag()){
+                return new ResultData(image);
+            }else{
+                return new ResultData("fail", image.getReturnMsg());
+            }
+        } catch (MyException e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw, true));
+            logger.error(e.getMsg() + sw.toString());
+            return new ResultData(LmEnum.RETURN_NUM_200.getNum(), "fail", e.getMsg());
         }
     }
 

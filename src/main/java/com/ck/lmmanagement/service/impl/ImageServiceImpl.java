@@ -39,6 +39,21 @@ public class ImageServiceImpl extends BaseServiceImpl<Image> implements ImageSer
         return image;
     }
 
+    @Override
+    public Image updateForm(Image image) throws MyException {
+        // 更新之前的校验
+        image = this.checkForm(image);
+        if(image.isEnableFlag()){
+            if(image.getId() != null){
+                super.updateForm(image);
+            }else{
+                image.setEnableFlag(false);
+                image.setReturnMsg("更新的id为空");
+            }
+        }
+        return image;
+    }
+
     /**
      * 保存或更新之前的校验
      * @param image 图片信息
