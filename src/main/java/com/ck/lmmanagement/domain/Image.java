@@ -1,0 +1,81 @@
+package com.ck.lmmanagement.domain;
+
+/**
+ * @author 01378803
+ * @date 2019/1/7 14:02
+ * Description  :
+ */
+public class Image extends BaseForm {
+    /**
+     * 主键id
+     */
+    private Long id;
+    /**
+     * 标题
+     */
+    private String title;
+    /**
+     * 概要
+     */
+    private String outline;
+    /**
+     * 正文
+     */
+    private String content;
+    /**
+     * 类别
+     */
+    private String category;
+    /**
+     * 上传附件信息
+     */
+    private UploadFile uploadFile;
+
+    public UploadFile getUploadFile() {
+        return uploadFile;
+    }
+
+    public void setUploadFile(UploadFile uploadFile) {
+        this.uploadFile = uploadFile;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getOutline() {
+        return outline;
+    }
+
+    public void setOutline(String outline) {
+        this.outline = outline;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+}

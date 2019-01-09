@@ -11,6 +11,14 @@ public class UploadFile extends BaseForm {
      */
     private Long id;
     /**
+     * 来源参考表
+     */
+    private String refTable;
+    /**
+     * 来源参考Id
+     */
+    private Long refId;
+    /**
      * 文件路径
      */
     private String filePath;
@@ -65,5 +73,21 @@ public class UploadFile extends BaseForm {
 
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getRefTable() {
+        return refTable;
+    }
+
+    public void setRefTable(String refTable) {
+        this.refTable = refTable;
+    }
+
+    public Long getRefId() {
+        return refId;
+    }
+
+    public void setRefId(Long refId) {
+        this.refId = refId;
     }
 }

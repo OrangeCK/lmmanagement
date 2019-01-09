@@ -29,7 +29,11 @@ public enum LmEnum {
     /**
      * 常量名
      */
-    AUTHORIZATION("Authorization"),REFRESH_TOKEN("Refresh_Token"),LOGIN_NAME("loginName"),PASSWORD("password"),USER_INFO("userInfo"),ROLES("roles"),PERMISSIONS("permissions");
+    AUTHORIZATION("Authorization"),REFRESH_TOKEN("Refresh_Token"),LOGIN_NAME("loginName"),PASSWORD("password"),USER_INFO("userInfo"),ROLES("roles"),PERMISSIONS("permissions"),
+    /**
+     * 业务表名
+     */
+    IMAGE_BLOG("image_blog")
     ;
     private Integer num;
     /**

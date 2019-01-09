@@ -11,5 +11,49 @@
         (#{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, #{fileSize,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR},
         #{creationBy, jdbcType=BIGINT}, #{creationDate, jdbcType=TIMESTAMP}, #{updatedBy, jdbcType=BIGINT}, #{updatedDate, jdbcType=TIMESTAMP})
     </insert>
+    <!--删除附件表中附件信息-->
+    <delete id="deleteForm" parameterType="java.lang.Long">
+        DELETE FROM m_fnd_upload WHERE id = #{id, jdbcType=BIGINT}
+    </delete>
+    <!--根据id查询附件的信息-->
+    <select id="findDetailById" parameterType="java.lang.Long" resultType="UploadFile">
+        SELECT
+            file_name AS fileName,
+            file_type AS fileType,
+            file_size AS fileSize,
+            file_path AS filePath,
+            ref_table AS refTable,
+            ref_id AS refId
+        FROM m_fnd_upload up
+        WHERE up.enable_flag = 'Y'
+            AND up.id = #{id, jdbcType=BIGINT}
+    </select>
+    <!--更新附件信息-->
+    <update id="updateForm" parameterType="UploadFile">
+        UPDATE m_fnd_upload
+        <set>
+            <if test="fileName != null and fileName != ''">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType != null and fileType != ''">
+                file_type = #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null and fileSize != ''">
+                file_size = #{fileSize,jdbcType=VARCHAR},
+            </if>
+            <if test="filePath != null and filePath != ''">
+                file_path = #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="refId != null and refId != ''">
+                ref_id = #{refId,jdbcType=BIGINT},
+            </if>
+            <if test="refTable != null and refTable != ''">
+                ref_table = #{refTable,jdbcType=VARCHAR},
+            </if>
+            s_uid = #{updatedBy, jdbcType=BIGINT},
+            s_ut = #{updatedDate, jdbcType=TIMESTAMP}
+        </set>
+        WHERE id = #{id, jdbcType=BIGINT}
+    </update>
 </mapper>
 

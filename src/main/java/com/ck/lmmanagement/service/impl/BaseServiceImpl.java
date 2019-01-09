@@ -43,7 +43,7 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
 
     @Override
     public T findDetailById(Long id) {
-        return null;
+        return baseMapper.findDetailById(id);
     }
 
     @Override

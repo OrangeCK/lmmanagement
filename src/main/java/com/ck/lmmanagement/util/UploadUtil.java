@@ -14,8 +14,9 @@ public class UploadUtil {
 
     /**
      * 上传文件
-     * @param multipartFile
-     * @param path
+     * @param multipartFile 文件
+     * @param path 路径
+     * @param rootFileName 文件名
      * @return
      */
     public static String uploadFile(MultipartFile multipartFile, String path, String rootFileName) throws IOException {
@@ -25,7 +26,7 @@ public class UploadUtil {
         }
         FileInputStream fileInputStream = (FileInputStream) multipartFile.getInputStream();
         // 获取文件的后缀
-        String suffix = rootFileName.substring(rootFileName.lastIndexOf(".") + 1);
+        String suffix = rootFileName.substring(rootFileName.lastIndexOf("."));
         // 获取时间戳
         long currTimestamp = System.currentTimeMillis();
         // 给文件重命名
@@ -46,5 +47,23 @@ public class UploadUtil {
         fileInputStream.close();
         fo.close();
         return fileName;
+    }
+
+    /**
+     * 删除文件
+     * @param file 文件
+     * @return
+     */
+    public static boolean deleteFile(File file){
+        // 判断是否是文件夹
+        if(file.isDirectory()){
+            String[] childrenList = file.list();
+            for(int i = 0; i < childrenList.length; i++){
+                // 递归删除目录下的子目录
+                deleteFile(new File(file, childrenList[i]));
+            }
+        }
+        // 目录为空，可以删除
+        return file.delete();
     }
 }

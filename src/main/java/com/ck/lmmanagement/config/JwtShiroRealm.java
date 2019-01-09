@@ -89,7 +89,6 @@ public class JwtShiroRealm extends AuthorizingRealm {
                 logger.error("权限配置出错！");
             }
             logger.info("用户" + employee.getUserName() + "的权限:{}", authorizationInfo.getStringPermissions());
-            logger.info("用户" + employee.getUserName() + "的角色:{}", authorizationInfo.getRoles());
             return authorizationInfo;
         }
         return null;
