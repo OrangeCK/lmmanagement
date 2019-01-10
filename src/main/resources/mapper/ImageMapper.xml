@@ -6,9 +6,9 @@
         <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO `image_blog`(`title`, `outline`, `content`, `category`, `s_cid`, `s_ct`, `s_uid`, `s_ut`)
+        INSERT INTO `image_blog`(`title`, `outline`,`markdown_text`, `content`, `category`, `s_cid`, `s_ct`, `s_uid`, `s_ut`)
         VALUES
-        (#{title,jdbcType=VARCHAR}, #{outline,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR},
+        (#{title,jdbcType=VARCHAR}, #{outline,jdbcType=VARCHAR},#{markdownText,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR},
         #{creationBy, jdbcType=BIGINT}, #{creationDate, jdbcType=TIMESTAMP}, #{updatedBy, jdbcType=BIGINT}, #{updatedDate, jdbcType=TIMESTAMP})
     </insert>
     <sql id="pageCondition">
@@ -25,8 +25,10 @@
     <!--分页查询-->
     <select id="findPageData" parameterType="Image" resultType="Image">
         SELECT
+            ib.id AS id,
             ib.title AS title,
             ib.outline AS outline,
+            ib.markdown_text AS markdownText,
             ib.content AS content,
             ib.category AS category,
             ib.s_ct creationDate
@@ -56,6 +58,9 @@
             <if test="category != null and category != ''">
                 category = #{category,jdbcType=VARCHAR},
             </if>
+            <if test="markdownText != null and markdownText != ''">
+                markdown_text = #{markdownText,jdbcType=VARCHAR},
+            </if>
             <if test="content != null and content != ''">
                 content = #{content,jdbcType=VARCHAR},
             </if>
@@ -68,5 +73,19 @@
     <update id="updateToDisable" parameterType="java.lang.Long">
         UPDATE image_blog SET enable_flag = 'N' WHERE id = #{id, jdbcType=BIGINT}
     </update>
+    <!--根据id查询image信息-->
+    <select id="findDetailById" parameterType="java.lang.Long" resultType="Image">
+        SELECT
+            ib.id AS id,
+            ib.title AS title,
+            ib.outline AS outline,
+            ib.markdown_text AS markdownText,
+            ib.content AS content,
+            ib.category AS category,
+            ib.s_ct creationDate
+        FROM
+            image_blog ib
+        WHERE id = #{id, jdbcType=BIGINT}
+    </select>
 </mapper>
 

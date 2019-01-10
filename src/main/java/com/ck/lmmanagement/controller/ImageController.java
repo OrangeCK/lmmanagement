@@ -9,10 +9,7 @@ import com.ck.lmmanagement.service.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
@@ -39,6 +36,16 @@ public class ImageController {
     @RequestMapping(value = "/imagePageList", method = RequestMethod.POST)
     public PageList<Image> imagePageList(@RequestBody Image image){
         return imageService.getPageList(image);
+    }
+
+    /**
+     * 查看详情
+     * @param id 博客id
+     * @return
+     */
+    @RequestMapping(value = "/imageDetail", method = RequestMethod.POST)
+    public ResultData imageDetail(@RequestParam Long id){
+        return new ResultData(imageService.findDetailById(id));
     }
 
     /**

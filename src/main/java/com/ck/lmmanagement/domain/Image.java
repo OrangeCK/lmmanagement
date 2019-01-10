@@ -23,6 +23,10 @@ public class Image extends BaseForm {
      */
     private String content;
     /**
+     * markdown格式的文本
+     */
+    private String markdownText;
+    /**
      * 类别
      */
     private String category;
@@ -30,14 +34,6 @@ public class Image extends BaseForm {
      * 上传附件信息
      */
     private UploadFile uploadFile;
-
-    public UploadFile getUploadFile() {
-        return uploadFile;
-    }
-
-    public void setUploadFile(UploadFile uploadFile) {
-        this.uploadFile = uploadFile;
-    }
 
     public Long getId() {
         return id;
@@ -77,5 +73,21 @@ public class Image extends BaseForm {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getMarkdownText() {
+        return markdownText;
+    }
+
+    public void setMarkdownText(String markdownText) {
+        this.markdownText = markdownText;
+    }
+
+    public UploadFile getUploadFile() {
+        return uploadFile;
+    }
+
+    public void setUploadFile(UploadFile uploadFile) {
+        this.uploadFile = uploadFile;
     }
 }
