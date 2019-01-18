@@ -1,7 +1,11 @@
 package com.ck.lmmanagement.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.UUID;
 
@@ -11,6 +15,7 @@ import java.util.UUID;
  * Description  : 上传工具类
  */
 public class UploadUtil {
+    private final static Logger logger = LoggerFactory.getLogger(UploadUtil.class);
 
     /**
      * 上传文件
@@ -47,6 +52,58 @@ public class UploadUtil {
         fileInputStream.close();
         fo.close();
         return fileName;
+    }
+
+    /**
+     * 下载文件
+     * @param request 请求
+     * @param response 响应
+     */
+    public static void downloadFile(HttpServletResponse response, String fileName, String filePath){
+        File file = new File(filePath);
+        // 为了防止客户端浏览器直接打开目标文件,设置强制下载不打开
+        response.setContentType("application/force-download");
+        // 设置文件名
+        response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        byte[] but = new byte[1024];
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        try {
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            OutputStream os = response.getOutputStream();
+            int len = 0;
+            while(-1 != (len = bis.read(but, 0 ,but.length))){
+                os.write(but, 0, len);
+            }
+        } catch (FileNotFoundException e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw, true));
+            logger.error("文件没有找到，文件下载失败" + sw.toString());
+        } catch (IOException e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw, true));
+            logger.error("文件下载失败" + sw.toString());
+        }finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    StringWriter sw = new StringWriter();
+                    e.printStackTrace(new PrintWriter(sw, true));
+                    logger.error("bis流关闭错误，文件下载失败" + sw.toString());
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    StringWriter sw = new StringWriter();
+                    e.printStackTrace(new PrintWriter(sw, true));
+                    logger.error("fis流关闭错误，文件下载失败" + sw.toString());
+                }
+            }
+        }
     }
 
     /**

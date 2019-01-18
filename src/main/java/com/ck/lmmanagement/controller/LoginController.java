@@ -63,6 +63,15 @@ public class LoginController {
         }
     }
 
+    /**
+     * 退出登录
+     * @return
+     */
+    @RequestMapping(value = "/quitLogin", method = RequestMethod.POST)
+    public ResultData quitLogin(){
+        return new ResultData();
+    }
+
     @RequestMapping(value = "/unAuthorization", method = RequestMethod.POST)
     public ResultData unAuthorization(){
         return new ResultData(LmEnum.RETURN_NUM_401.getNum(), "fail", "登录身份验证错误");

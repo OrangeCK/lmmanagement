@@ -15,6 +15,10 @@
     <delete id="deleteForm" parameterType="java.lang.Long">
         DELETE FROM m_fnd_upload WHERE id = #{id, jdbcType=BIGINT}
     </delete>
+    <!--失效附件表中附件信息-->
+    <update id="updateToDisableByRefId" parameterType="java.lang.Long">
+        UPDATE m_fnd_upload SET enable_flag = 'N' WHERE ref_id = #{id, jdbcType=BIGINT}
+    </update>
     <!--根据id查询附件的信息-->
     <select id="findDetailById" parameterType="java.lang.Long" resultType="UploadFile">
         SELECT

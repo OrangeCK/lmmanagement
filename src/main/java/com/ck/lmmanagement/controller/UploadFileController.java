@@ -1,11 +1,13 @@
 package com.ck.lmmanagement.controller;
 
+import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.ResultData;
 import com.ck.lmmanagement.domain.UploadFile;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.service.UploadFileService;
 import com.ck.lmmanagement.util.UploadUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,6 +43,7 @@ public class UploadFileController {
      * @param multipartFile
      * @return
      */
+    @RequiresPermissions("uploadImg")
     @RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
     public ResultData uploadImg(@RequestParam("multipartFile") MultipartFile multipartFile){
         if(multipartFile.isEmpty() || StringUtils.isBlank(multipartFile.getOriginalFilename())){
@@ -77,10 +82,26 @@ public class UploadFileController {
     }
 
     /**
+     * 下载图片
+     * @param id
+     * @return
+     */
+    @RequiresPermissions("downloadImg")
+    @RequestMapping(value = "/downloadImg", method = RequestMethod.POST)
+    public void downloadImg(HttpServletResponse response, @RequestParam("id") Long id){
+        UploadFile uploadFile = uploadFileService.findDetailById(id);
+        if(uploadFile != null){
+            String filePath = uploadFile.getFilePath();
+            UploadUtil.downloadFile(response, uploadFile.getFileName(), filePath);
+        }
+    }
+
+    /**
      * 删除图片接口
      * @param id 附件id
      * @return
      */
+    @RequiresPermissions("deleteUploadImg")
     @RequestMapping(value = "/deleteUploadImg", method = RequestMethod.POST)
     public ResultData deleteUploadImg(@RequestParam("id") Long id){
         UploadFile uploadFile = uploadFileService.findDetailById(id);

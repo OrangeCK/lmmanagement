@@ -6,6 +6,7 @@ import com.ck.lmmanagement.domain.PageList;
 import com.ck.lmmanagement.domain.ResultData;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.service.ImageService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class ImageController {
      * @param image 图片信息
      * @return
      */
+    @RequiresPermissions("imagePageList")
     @RequestMapping(value = "/imagePageList", method = RequestMethod.POST)
     public PageList<Image> imagePageList(@RequestBody Image image){
         return imageService.getPageList(image);
@@ -43,17 +45,34 @@ public class ImageController {
      * @param id 博客id
      * @return
      */
+    @RequiresPermissions("imageDetail")
     @RequestMapping(value = "/imageDetail", method = RequestMethod.POST)
     public ResultData imageDetail(@RequestParam Long id){
         return new ResultData(imageService.findDetailById(id));
     }
 
     /**
+     * 失效图片博客
+     * @param id 博客id
+     * @return
+     */
+    @RequiresPermissions("disableImage")
+    @RequestMapping(value = "/disableImage", method = RequestMethod.POST)
+    public ResultData disableImage(@RequestParam Long id){
+        int count = imageService.updateToDisable(id);
+        if(count > 0){
+            return new ResultData();
+        }else{
+            return new ResultData("fail", "操作失败");
+        }
+    }
+    /**
      * 新增图片信息
      * @param image 图片信息
      * @param request
      * @return
      */
+    @RequiresPermissions("updateImage")
     @RequestMapping(value = "/updateImage", method = RequestMethod.POST)
     public ResultData updateImage(@RequestBody Image image, HttpServletRequest request){
         try {
@@ -77,6 +96,7 @@ public class ImageController {
      * @param request
      * @return
      */
+    @RequiresPermissions("addImage")
     @RequestMapping(value = "/addImage", method = RequestMethod.POST)
     public ResultData addImage(@RequestBody Image image, HttpServletRequest request){
         try {

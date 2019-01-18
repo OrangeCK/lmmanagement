@@ -4,6 +4,7 @@ import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.Image;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.mapper.ImageMapper;
+import com.ck.lmmanagement.mapper.UploadFileMapper;
 import com.ck.lmmanagement.service.ImageService;
 import com.ck.lmmanagement.service.UploadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class ImageServiceImpl extends BaseServiceImpl<Image> implements ImageSer
     ImageMapper imageMapper;
     @Autowired
     UploadFileService uploadFileService;
+    @Autowired
+    UploadFileMapper uploadFileMapper;
     @Override
     public Image saveForm(Image image) throws MyException {
         // 新增之前的校验
@@ -52,6 +55,15 @@ public class ImageServiceImpl extends BaseServiceImpl<Image> implements ImageSer
             }
         }
         return image;
+    }
+
+    @Override
+    public Integer updateToDisable(Long id) {
+        int count1 = super.updateToDisable(id);
+        if(count1 > 0){
+            int count2 = uploadFileMapper.updateToDisableByRefId(id);
+        }
+        return count1;
     }
 
     /**

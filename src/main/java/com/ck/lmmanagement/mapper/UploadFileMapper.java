@@ -12,4 +12,10 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface UploadFileMapper extends BaseMapper<UploadFile> {
+    /**
+     * 根据refId失效附件
+     * @param refId
+     * @return
+     */
+    Integer updateToDisableByRefId(Long refId);
 }
