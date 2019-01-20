@@ -11,7 +11,8 @@
         FROM
             m_fnd_user fu
         WHERE
-            fu.login_name = #{loginName, jdbcType=VARCHAR}
+            fu.enable_flag = 'Y'
+            AND fu.login_name = #{loginName, jdbcType=VARCHAR}
             AND fu.password = #{password, jdbcType=VARCHAR}
     </select>
     <!--验证是否有这个用户-->
@@ -25,11 +26,13 @@
         FROM
             m_fnd_user fu
         WHERE
-            fu.login_name = #{loginName, jdbcType=VARCHAR}
+            fu.enable_flag = 'Y'
+            AND fu.login_name = #{loginName, jdbcType=VARCHAR}
+        limit 1
     </select>
     <!--根据登录名取得登录密码-->
     <select id="getPasswordByLoginName" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT fu.password FROM m_fnd_user fu WHERE fu.login_name = #{loginName, jdbcType=VARCHAR} limit 1
+        SELECT fu.password FROM m_fnd_user fu WHERE fu.enable_flag = 'Y' AND fu.login_name = #{loginName, jdbcType=VARCHAR} limit 1
     </select>
     <sql id="pageCondition">
         <where>

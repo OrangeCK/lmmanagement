@@ -7,6 +7,7 @@ import com.ck.lmmanagement.domain.Employee;
 import com.ck.lmmanagement.domain.ResultData;
 import com.ck.lmmanagement.service.EmployeeService;
 import com.ck.lmmanagement.util.JwtUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -50,15 +51,17 @@ public class LoginController {
         String loginName = jsonObject.getString("loginName");
         // 登录密码
         String password = jsonObject.getString("password");
-        String realPassword = employeeService.getPasswordByLoginName(loginName);
-        if(realPassword == null){
+        Employee employee = employeeService.loginAccountByLoginName(loginName);
+        if(employee == null){
             return new ResultData(LmEnum.RETURN_NUM_401.getNum(), "fail", "用户名错误");
-        }else if(!realPassword.equals(password)){
+        }else if(StringUtils.isEmpty(employee.getPassword()) || !employee.getPassword().equals(password)){
             return new ResultData(LmEnum.RETURN_NUM_401.getNum(), "fail", "密码错误");
         }else{
-            Map<String, String> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             map.put("Authorization",JwtUtil.sign(loginName));
-            map.put("Refresh_Token",JwtUtil.refreshSign(loginName, realPassword));
+            map.put("Refresh_Token",JwtUtil.refreshSign(loginName, employee.getPassword()));
+            map.put("loginName",loginName);
+            map.put("id",employee.getId());
             return new ResultData(map);
         }
     }
