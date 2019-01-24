@@ -108,8 +108,21 @@
         WHERE id = #{id, jdbcType=BIGINT}
     </update>
     <!--失效用户-->
-    <update id="updateToDisable" parameterType="java.lang.Long">
-        UPDATE m_fnd_user SET enable_flag = 'N' WHERE id = #{id, jdbcType=BIGINT}
+    <update id="updateToDisable" parameterType="Employee">
+        UPDATE m_fnd_user SET enable_flag = 'N',s_uid = #{updatedBy, jdbcType=BIGINT},s_ut = #{updatedDate, jdbcType=TIMESTAMP}  WHERE id = #{id, jdbcType=BIGINT}
     </update>
+    <!--校验登陆名是否唯一-->
+    <select id="countCheckLoginName" parameterType="Employee" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            m_fnd_user fu
+        WHERE
+            fu.enable_flag = 'Y'
+            AND fu.login_name = #{loginName, jdbcType=VARCHAR}
+        <if test="id != null">
+            AND fu.id != #{id, jdbcType=BIGINT}
+        </if>
+    </select>
 </mapper>
 

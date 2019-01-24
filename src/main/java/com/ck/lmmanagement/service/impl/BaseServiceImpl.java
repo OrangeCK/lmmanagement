@@ -73,8 +73,9 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
     }
 
     @Override
-    public Integer updateToDisable(Long id) {
-        int count = baseMapper.updateToDisable(id);
+    public Integer updateToDisable(T form) {
+        this.basicForm(form);
+        int count = baseMapper.updateToDisable(form);
         return count;
     }
 
@@ -85,9 +86,7 @@ public class BaseServiceImpl<T extends BaseForm> implements BaseService<T> {
 
     public void basicForm(T form){
         Date date=new Date();
-        form.setCreationBy((long)1);
         form.setCreationDate(date);
-        form.setUpdatedBy((long)1);
         form.setUpdatedDate(date);
     }
 }

@@ -33,4 +33,11 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      */
     String getPasswordByLoginName(String loginName);
 
+    /**
+     * 校验登陆名是否存在
+     * @param employee
+     * @return
+     */
+    Integer countCheckLoginName(Employee employee);
+
 }

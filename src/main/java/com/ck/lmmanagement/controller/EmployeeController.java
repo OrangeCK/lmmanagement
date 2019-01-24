@@ -66,8 +66,8 @@ public class EmployeeController {
     public ResultData addEmployee(@RequestBody Employee employee, HttpServletRequest request){
         logger.info("正在新增用户");
         try {
-            Employee employee1 = this.getCurrentUser(request);
-            logger.info("打印当前用户" + employee1);
+            // 得到当前登录用户的信息
+            this.getCurrentUser(employee, request);
             employee = employeeService.saveForm(employee);
             if(employee.isEnableFlag()){
                 return new ResultData("新增成功");
@@ -91,9 +91,11 @@ public class EmployeeController {
     @ApiOperation(value = "更新用户", notes = "更新用户")
     @ApiImplicitParam(name = "employee",value="用户信息",required = true,paramType = "body",dataType = "Employee")
     @RequestMapping(value = "/updateEmployee", method = RequestMethod.POST)
-    public ResultData updateEmployee(@RequestBody Employee employee){
+    public ResultData updateEmployee(@RequestBody Employee employee, HttpServletRequest request){
         logger.info("正在更新用户");
         try {
+            // 得到当前登录用户的信息
+            this.getCurrentUser(employee, request);
             employee = employeeService.updateForm(employee);
             if(employee.isEnableFlag()){
                 return new ResultData("更新成功");
@@ -110,16 +112,18 @@ public class EmployeeController {
 
     /**
      * 失效用户
-     * @param id 用户id
+     * @param employee 用户信息
      * @return
      */
     @RequiresPermissions("disableEmployee")
     @ApiOperation(value = "失效用户", notes = "失效用户")
     @ApiImplicitParam(name = "id",value="用户id",required = true,paramType = "query", dataType = "Long")
     @RequestMapping(value = "/disableEmployee", method = RequestMethod.POST)
-    public ResultData disableEmployee(@RequestParam Long id){
+    public ResultData disableEmployee(@RequestBody Employee employee, HttpServletRequest request){
+        // 得到当前登录用户的信息
+        this.getCurrentUser(employee, request);
         logger.info("正在删除用户");
-        int count = employeeService.updateToDisable(id);
+        int count = employeeService.updateToDisable(employee);
         if(count > 0){
             return new ResultData();
         }else{
@@ -132,9 +136,11 @@ public class EmployeeController {
      * @param request
      * @return
      */
-    private Employee getCurrentUser(HttpServletRequest request){
+    private void getCurrentUser(Employee employee, HttpServletRequest request){
         String token = request.getHeader(LmEnum.AUTHORIZATION.getName());
-        Employee employee = JSON.parseObject(redisUtil.hget(token, LmEnum.USER_INFO.getName()).toString(), Employee.class);
-        return employee;
+        Employee emp = JSON.parseObject(redisUtil.hget(token, LmEnum.USER_INFO.getName()).toString(), Employee.class);
+        employee.setCreationBy(emp.getId());
+        employee.setUpdatedBy(emp.getId());
+        employee.setUserName(emp.getUserName());
     }
 }

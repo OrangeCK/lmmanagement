@@ -1,11 +1,14 @@
 package com.ck.lmmanagement.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ck.lmmanagement.constant.LmEnum;
+import com.ck.lmmanagement.domain.Employee;
 import com.ck.lmmanagement.domain.Image;
 import com.ck.lmmanagement.domain.PageList;
 import com.ck.lmmanagement.domain.ResultData;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.service.ImageService;
+import com.ck.lmmanagement.util.RedisUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +30,8 @@ public class ImageController {
     private final static Logger logger = LoggerFactory.getLogger(ImageController.class);
     @Autowired
     ImageService imageService;
-
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 分页查询
@@ -53,13 +57,14 @@ public class ImageController {
 
     /**
      * 失效图片博客
-     * @param id 博客id
+     * @param image 博客
      * @return
      */
     @RequiresPermissions("disableImage")
     @RequestMapping(value = "/disableImage", method = RequestMethod.POST)
-    public ResultData disableImage(@RequestParam Long id){
-        int count = imageService.updateToDisable(id);
+    public ResultData disableImage(@RequestBody Image image, HttpServletRequest request){
+        this.getCurrentUser(image, request);
+        int count = imageService.updateToDisable(image);
         if(count > 0){
             return new ResultData();
         }else{
@@ -76,6 +81,7 @@ public class ImageController {
     @RequestMapping(value = "/updateImage", method = RequestMethod.POST)
     public ResultData updateImage(@RequestBody Image image, HttpServletRequest request){
         try {
+            this.getCurrentUser(image, request);
             image = imageService.updateForm(image);
             if(image.isEnableFlag()){
                 return new ResultData(image);
@@ -100,6 +106,7 @@ public class ImageController {
     @RequestMapping(value = "/addImage", method = RequestMethod.POST)
     public ResultData addImage(@RequestBody Image image, HttpServletRequest request){
         try {
+            this.getCurrentUser(image, request);
             image = imageService.saveForm(image);
             if(image.isEnableFlag()){
                 return new ResultData(image);
@@ -112,6 +119,18 @@ public class ImageController {
             logger.error(e.getMsg() + sw.toString());
             return new ResultData(LmEnum.RETURN_NUM_200.getNum(), "fail", e.getMsg());
         }
+    }
+
+    /**
+     * 从redis获取当前登录人的信息
+     * @param request
+     * @return
+     */
+    private void getCurrentUser(Image image, HttpServletRequest request){
+        String token = request.getHeader(LmEnum.AUTHORIZATION.getName());
+        Employee emp = JSON.parseObject(redisUtil.hget(token, LmEnum.USER_INFO.getName()).toString(), Employee.class);
+        image.setCreationBy(emp.getId());
+        image.setUpdatedBy(emp.getId());
     }
 
 }

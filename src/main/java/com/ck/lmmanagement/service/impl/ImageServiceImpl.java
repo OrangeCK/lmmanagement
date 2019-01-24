@@ -2,6 +2,7 @@ package com.ck.lmmanagement.service.impl;
 
 import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.Image;
+import com.ck.lmmanagement.domain.UploadFile;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.mapper.ImageMapper;
 import com.ck.lmmanagement.mapper.UploadFileMapper;
@@ -58,10 +59,14 @@ public class ImageServiceImpl extends BaseServiceImpl<Image> implements ImageSer
     }
 
     @Override
-    public Integer updateToDisable(Long id) {
-        int count1 = super.updateToDisable(id);
+    public Integer updateToDisable(Image image) {
+        int count1 = super.updateToDisable(image);
         if(count1 > 0){
-            int count2 = uploadFileMapper.updateToDisableByRefId(id);
+            UploadFile file = new UploadFile();
+            file.setRefId(image.getId());
+            file.setUpdatedBy(image.getUpdatedBy());
+            file.setUpdatedDate(image.getUpdatedDate());
+            int count2 = uploadFileMapper.updateToDisableByRefId(file);
         }
         return count1;
     }

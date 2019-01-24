@@ -65,10 +65,10 @@ public interface BaseService<T extends BaseForm> {
 
     /**
      * 失效
-     * @param id
+     * @param form
      * @return
      */
-    Integer updateToDisable(Long id);
+    Integer updateToDisable(T form);
 
     /**
      * 重新置为有效

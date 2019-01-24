@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -85,8 +87,9 @@ public class JwtShiroRealm extends AuthorizingRealm {
                 // 注入权限
                 authorizationInfo.setStringPermissions(permissionSet);
             } catch (Exception e) {
-                e.printStackTrace();
-                logger.error("权限配置出错！");
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw, true));
+                logger.error("权限配置错误" + sw.toString());
             }
             logger.info("用户" + employee.getUserName() + "的权限:{}", authorizationInfo.getStringPermissions());
             return authorizationInfo;

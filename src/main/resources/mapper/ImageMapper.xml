@@ -70,8 +70,8 @@
         WHERE id = #{id, jdbcType=BIGINT}
     </update>
     <!--失效-->
-    <update id="updateToDisable" parameterType="java.lang.Long">
-        UPDATE image_blog SET enable_flag = 'N' WHERE id = #{id, jdbcType=BIGINT}
+    <update id="updateToDisable" parameterType="Image">
+        UPDATE image_blog SET enable_flag = 'N',s_uid = #{updatedBy, jdbcType=BIGINT},s_ut = #{updatedDate, jdbcType=TIMESTAMP} WHERE id = #{id, jdbcType=BIGINT}
     </update>
     <!--根据id查询image信息-->
     <select id="findDetailById" parameterType="java.lang.Long" resultType="Image">

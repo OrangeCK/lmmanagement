@@ -1,10 +1,13 @@
 package com.ck.lmmanagement.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ck.lmmanagement.constant.LmEnum;
+import com.ck.lmmanagement.domain.Employee;
 import com.ck.lmmanagement.domain.ResultData;
 import com.ck.lmmanagement.domain.UploadFile;
 import com.ck.lmmanagement.exception.MyException;
 import com.ck.lmmanagement.service.UploadFileService;
+import com.ck.lmmanagement.util.RedisUtil;
 import com.ck.lmmanagement.util.UploadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -36,6 +39,8 @@ public class UploadFileController {
     private final static Logger logger = LoggerFactory.getLogger(UploadFileController.class);
     @Autowired
     UploadFileService uploadFileService;
+    @Autowired
+    private RedisUtil redisUtil;
     @Value("${com.filePath.img}")
     private String imagePath;
     /**
@@ -45,7 +50,7 @@ public class UploadFileController {
      */
     @RequiresPermissions("uploadImg")
     @RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
-    public ResultData uploadImg(@RequestParam("multipartFile") MultipartFile multipartFile){
+    public ResultData uploadImg(@RequestParam("multipartFile") MultipartFile multipartFile, HttpServletRequest request){
         if(multipartFile.isEmpty() || StringUtils.isBlank(multipartFile.getOriginalFilename())){
             return new ResultData("fail", "上传文件NULL");
         }
@@ -58,6 +63,7 @@ public class UploadFileController {
         try {
             String fileName = UploadUtil.uploadFile(multipartFile, imagePath, rootFileName);
             UploadFile uploadFile = new UploadFile();
+            this.getCurrentUser(uploadFile, request);
             uploadFile.setFileName(rootFileName);
             uploadFile.setFilePath(File.separator + fileName);
             uploadFile.setFileType(multipartFile.getContentType());
@@ -127,4 +133,14 @@ public class UploadFileController {
         }
     }
 
+    /**
+     * 从redis获取当前登录人的信息
+     * @param request
+     * @return
+     */
+    private void getCurrentUser(UploadFile uploadFile, HttpServletRequest request){
+        String token = request.getHeader(LmEnum.AUTHORIZATION.getName());
+        Employee emp = JSON.parseObject(redisUtil.hget(token, LmEnum.USER_INFO.getName()).toString(), Employee.class);
+        uploadFile.setCreationBy(emp.getId());
+    }
 }

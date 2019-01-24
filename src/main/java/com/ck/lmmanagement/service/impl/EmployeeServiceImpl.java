@@ -49,6 +49,10 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
                 // 循环保存用户角色关系
                 for(Role role : employee.getRoles()){
                     role.setUserId(employee.getId());
+                    role.setCreationBy(employee.getCreationBy());
+                    role.setUpdatedBy(employee.getUpdatedBy());
+                    role.setCreationDate(employee.getCreationDate());
+                    role.setUpdatedDate(employee.getUpdatedDate());
                     roleService.addUserAndRoleRelation(role);
                 }
             }else{
@@ -73,6 +77,10 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
                 // 循环保存用户角色关系
                 for(Role role : employee.getRoles()){
                     role.setUserId(employee.getId());
+                    role.setCreationBy(employee.getCreationBy());
+                    role.setUpdatedBy(employee.getUpdatedBy());
+                    role.setCreationDate(employee.getCreationDate());
+                    role.setUpdatedDate(employee.getUpdatedDate());
                     roleService.addUserAndRoleRelation(role);
                 }
             }else{
@@ -93,6 +101,15 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
                     || StringUtils.isEmpty(employee.getSex()) || StringUtils.isEmpty(employee.getUserPhone())){
                 employee.setEnableFlag(false);
                 employee.setReturnMsg("登录名、用户名称、性别、电话等不能为空");
+                return employee;
+            }
+        }
+        // 校验登陆名是否唯一
+        if(employee.isEnableFlag()){
+            int count = employeeMapper.countCheckLoginName(employee);
+            if(count > 0){
+                employee.setEnableFlag(false);
+                employee.setReturnMsg("登录名已存在");
                 return employee;
             }
         }
