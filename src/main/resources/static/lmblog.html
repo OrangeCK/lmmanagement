@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="">
+	<meta name="description" content="" />
+	<script src="./js/lm.js"></script>
+	<script src="./js/jquery-3.3.1.min.js"></script>
+	<script src="./js/bootstrap.bundle.min.js" ></script>
+	<script>window.jQuery || document.write('<script src="./js/jquery-3.3.1.min.js"><\/script>')</script>
+	<link href="./css/common.css" rel="styleSheet" type="text/css">
+	<link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="./css/markdown.css" rel="styleSheet" type="text/css">
+    <title>first_vue_project</title>
+  </head>
+  <style type="text/css">
+	.bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+      }
+    @media (min-width: 768px) {
+		.bd-placeholder-img-lg {
+		  font-size: 3.5rem;
+		}
+	  }
+	 .my-sm-0:hover{
+		background-color:orange;
+		
+	 }
+	 .header-famliy{
+		font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+	 }
+	 .lm-shadow{
+		background:#fff;
+		-moz-box-shadow: 2px 2px 10px #CBD0D3;
+		-webkit-box-shadow: 2px 2px 10px #CBD0D3;
+		box-shadow:2px 2px 10px #CBD0D3;
+		padding-top:60px;
+	 }
+  </style>
+  <body>
+    <header>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark header-famliy" style="background:linear-gradient(to bottom right,#524E4D, #626063, #898989, #CBD0D3)!important">
+    <a class="navbar-brand" href="#">Carousel</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto" style="margin:0">
+        <li class="nav-item active" style="margin:0">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" style="margin:0">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item" style="margin:0">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+      <form class="form-inline mt-2 mt-md-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="color:#fff;border-color:orange;">Search</button>
+      </form>
+    </div>
+  </nav>
+</header>
+
+<main role="main" class="lm-shadow">
+ <div style="font:bold 20px arial,serif;margin:0em 0.1em 0em 0.5em;">这个文章的标题</div>
+  <div style="font-size:0.9rem;margin:0.5em 0.1em 0.1em 0.5em;color:grey;">
+	  <label>2019年1月11日22:49:51</label>
+	  <label style="margin:0 0 0 5em">栗子味橙子</label>
+	  <label style="margin:0 0 0 5em">标签</label>
+  </div>
+  <hr class="featurette-divider" style="margin-top:0;height:0.1em;background-color:#eee;">
+  <div class="container marketing" >
+<p><ul><li><a href="#jettywar_1">关于使用jetty部署war包后调用其他接口不通的问题</a></li><ul><li><a href="#1_2">1、现象描述</a></li><li><a href="#2_4">2、解决办法</a></li><li><a href="#3_8">3、扩充</a></li></ul></ul></p>
+<h1><a id="jettywar_1"></a>关于使用jetty部署war包后调用其他接口不通的问题</h1>
+<h2><a id="1_2"></a>1、现象描述</h2>
+<blockquote>
+<p>用eclipse工具开发java的web项目，eclipse上也是集成jetty服务器，开发调试的时候调用外部接口都一切正常的，（当时调用的tencent的地图的接口），但是把项目打成war后，扔到jetty的webapp目录下面，通过命令java -jar start.jar启动后，本省系统功能都是一切正常的，但是当访问地图接口时就出现异常的，感觉是连接有异常的原因，整了很久都不知道原因，开始考虑过是jetty版本的问题，但是换了好几个版本都是不行。后来是觉得是编码是不是有什么问题，然后就查找问问同事，试了一下还真是。</p>
+</blockquote>
+<h2><a id="2_4"></a>2、解决办法</h2>
+<blockquote>
+<p>启动的时候，启动命令如下：java -Dfile.encoding=UTF-8 -jar start.jar<br />
+<img src="https://i.imgur.com/73x12A4.png" alt="" /><br />
+图中我把命令写为一个bat文件，双击直接运行就行了，但是启动后发现，启动日志中的中文都变成了乱码，估计就是项目的编码和jetty服务器的编码有冲突造成了，因为比较急所以没去纠结怎么觉得这个乱码的问题，</p>
+</blockquote>
+<h2><a id="3_8"></a>3、扩充</h2>
+<blockquote>
+<p>直接像上图那样启动，会默认在C:\Users\Administrator\AppData\Local\Temp目录下解压war包，直接在jetty的根目录下间一个work文件夹，jetty就会把war文件解压到这里。</p>
+</blockquote>
+
+  </div><!-- /.container -->
+  <!-- FOOTER -->
+  <footer class="container">
+  	<p class="float-right" ><a href="#">Back to top</a></p>
+	<p class="float-left">&copy; 2017-2018 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+  </footer>
+</main>
+		
+</body>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#myCarousel").carousel('pause');
+	});
+</script>
+</html>
