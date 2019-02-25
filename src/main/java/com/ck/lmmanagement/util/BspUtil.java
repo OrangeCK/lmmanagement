@@ -14,8 +14,7 @@ import java.net.URLEncoder;
  * Title: BSPUtil.java  
  * Description: BSP的工具 
  * Copyright: Copyright (c) 2018
- * Company: www.sf-express.com 
- * @author Kang Chen  
+ * @author Kang Chen
  * @date 2018年9月25日 上午11:14:16
  * @version 1.0  
  */

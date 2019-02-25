@@ -3,8 +3,7 @@ package com.ck.lmmanagement.util;
  * Title: ReflectBean.java  
  * Description: 实体类映射工具 
  * Copyright: Copyright (c) 2018
- * Company: www.sf-express.com 
- * @author Kang Chen  
+ * @author Kang Chen
  * @date 2018年9月13日 下午5:14:37
  * @version 1.0  
  */
@@ -38,7 +37,7 @@ public class ReflectBean {
     String table = "m_fnd_permission";  
     //生成的实体类名类名
     String nameOfClass = "Permission";
-    String entityPrefixPath = "D:/user/01378803/workspace/channelexpand/channelexpand-dao/src/main/java/";
+    String entityPrefixPath = "D:/***/src/main/java/";
     String entityPackagePath = "com/sf/channelexpand/domain/";
     //数据库的列名称  
     private String[] colnames; // 列名数组  

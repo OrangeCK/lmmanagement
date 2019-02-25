@@ -24,8 +24,7 @@ import com.alibaba.fastjson.JSONObject;
  * Title: MapUtil.java  
  * Description: 调用tencent地图的api
  * Copyright: Copyright (c) 2018
- * Company: www.sf-express.com 
- * @author Kang Chen  
+ * @author Kang Chen
  * @date 2018年9月29日 上午10:45:33
  * @version 1.0  
  */

@@ -6,8 +6,7 @@ import java.util.List;
  * Title: ColumnInfoEntity.java  
  * Description:  
  * Copyright: Copyright (c) 2018
- * Company: www.sf-express.com 
- * @author Kang Chen  
+ * @author Kang Chen
  * @date 2018年7月26日 下午4:53:35
  * @version 1.0  
  */
