@@ -1,6 +1,8 @@
 package com.ck.lmmanagement.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.ck.lmmanagement.constant.LmEnum;
 import com.ck.lmmanagement.domain.Employee;
 import com.ck.lmmanagement.domain.PageList;
@@ -22,6 +24,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -129,6 +133,28 @@ public class EmployeeController {
         }else{
             return new ResultData("fail", "操作失败");
         }
+    }
+
+    /**
+     * 测试
+     */
+    @RequestMapping(value = "/testCompnanyRedis", method = RequestMethod.POST)
+    public JSONObject testCompnanyRedis(HttpServletRequest request){
+        try {
+            BufferedReader br = request.getReader();
+            String str, wholeStr = "";
+            while((str = br.readLine()) != null){
+                wholeStr += str;
+            }
+            logger.info("接收到的字符串:" + wholeStr);
+            JSONArray jsonArray = JSON.parseArray(wholeStr);
+            System.out.println("JSONArray转换:" + jsonArray.toJSONString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("success","false");
+        return jsonObject;
     }
 
     /**
