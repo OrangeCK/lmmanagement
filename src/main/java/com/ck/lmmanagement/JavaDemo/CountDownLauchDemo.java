@@ -13,11 +13,12 @@ public class CountDownLauchDemo {
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch doneSignal = new CountDownLatch(N);
         CountDownLatch startSignal = new CountDownLatch(1);
+        System.out.println("begin---------------");
         for(int i = 1; i <= N; i++){
             new Thread(new Worker(i, doneSignal, startSignal)).start();
         }
-        System.out.println("begin---------------");
-        startSignal.countDown();
+//        System.out.println("begin---------------");
+//        startSignal.countDown();
         doneSignal.await();
         System.out.println("end-----------------");
     }
@@ -36,13 +37,13 @@ public class CountDownLauchDemo {
         @Override
         public void run() {
             try {
-                startSignal.await();
+//                startSignal.await();
                 beginIndex = (beginIndex - 1) * 10 + 1;
                 for (int i = 0; i <= beginIndex + 10; i++) {
                     System.out.println("打印数字:" + i);
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
             } finally {
                 doneSignal.countDown();
             }
