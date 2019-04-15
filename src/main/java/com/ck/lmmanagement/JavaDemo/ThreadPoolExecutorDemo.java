@@ -26,7 +26,7 @@ public class ThreadPoolExecutorDemo {
         MyThread myThread = new MyThread();
         ThreadPoolExecutor executor = null;
         try {
-            executor = new ThreadPoolExecutor(3, 4, 5, TimeUnit.SECONDS,  new SynchronousQueue<Runnable>());
+            executor = new ThreadPoolExecutor(3, 4, 5, TimeUnit.SECONDS,  new LinkedBlockingDeque<>());
 //        ExecutorService executor = new ThreadPoolExecutor(1, 20, 60L, TimeUnit.SECONDS, new SynchronousQueue<>());
             executor.execute(myThread);
             executor.execute(myThread);
